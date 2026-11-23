@@ -84,23 +84,20 @@ em { font-style: italic; font-weight: 400; }
   position: fixed; inset: 0 0 auto 0;
   z-index: 100;
   padding: 1.4rem 0;
-  color: var(--white);
+  color: var(--black);
+  background: var(--white);
+  box-shadow: 0 1px 0 var(--grey-300);
   transition: background .4s, padding .4s, color .4s, box-shadow .4s;
 }
-.nav.scrolled {
-  background: var(--white);
-  color: var(--black);
-  padding: .9rem 0;
-  box-shadow: 0 1px 0 var(--grey-300);
-}
+.nav.scrolled { padding: .9rem 0; }
 .nav__inner { display: flex; align-items: center; justify-content: space-between; }
 .logo { display: inline-flex; align-items: center; gap: .7rem; font-family: var(--serif); font-size: 1.7rem; font-weight: 600; letter-spacing: .02em; }
 .logo__img {
   width: 72px; height: 72px; border-radius: 50%; object-fit: contain; flex-shrink: 0;
-  background: #fff; padding: 2px; box-shadow: 0 2px 10px rgba(0,0,0,.18);
+  background: #fff; padding: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.08);
   transition: width .4s, height .4s;
 }
-.nav.scrolled .logo__img { width: 56px; height: 56px; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+.nav.scrolled .logo__img { width: 56px; height: 56px; }
 .footer .logo__img { width: 84px; height: 84px; }
 .logo span { font-style: italic; font-weight: 400; }
 .nav__links { display: flex; align-items: center; gap: 2.2rem; }
@@ -113,10 +110,8 @@ em { font-style: italic; font-weight: 400; }
   width: 0; height: 1px; background: currentColor; transition: width .3s var(--ease);
 }
 .nav__links a:not(.btn):hover::after { width: 100%; }
-.nav .btn { background: var(--white); color: var(--black); border-color: var(--white); }
-.nav .btn:hover { background: transparent; color: var(--white); }
-.nav.scrolled .btn { background: var(--black); color: var(--white); border-color: var(--black); }
-.nav.scrolled .btn:hover { background: var(--white); color: var(--black); }
+.nav .btn { background: var(--black); color: var(--white); border-color: var(--black); }
+.nav .btn:hover { background: var(--white); color: var(--black); }
 
 .nav__toggle { display: none; background: none; border: 0; cursor: pointer; width: 32px; height: 22px; position: relative; color: inherit; }
 .nav__toggle span { position: absolute; left: 0; width: 100%; height: 1.5px; background: currentColor; transition: transform .3s, top .3s; }
@@ -124,47 +119,6 @@ em { font-style: italic; font-weight: 400; }
 .nav__toggle span:last-child { top: 15px; }
 .nav__toggle.open span:first-child { top: 10px; transform: rotate(45deg); }
 .nav__toggle.open span:last-child { top: 10px; transform: rotate(-45deg); }
-
-/* ---------- Hero ---------- */
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex; align-items: center;
-  color: var(--white);
-  background: var(--black);
-  overflow: hidden;
-}
-.hero__bg {
-  position: absolute; inset: 0;
-  /* images/hero.jpg is used if it exists; otherwise the stock photo underneath shows */
-  background:
-    url("../images/hero.jpg") center/cover,
-    url("https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=1800&q=80") center/cover;
-  transform: scale(1.08);
-  animation: heroZoom 18s ease-out forwards;
-}
-.hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.hero__overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.25) 100%);
-}
-@keyframes heroZoom { to { transform: scale(1); } }
-.hero__content { position: relative; padding-top: 4rem; }
-.hero .eyebrow { color: var(--grey-300); }
-.hero h1 { margin-bottom: 1.5rem; }
-.hero__text { max-width: 480px; font-size: 1.1rem; color: var(--grey-300); margin-bottom: 2.5rem; }
-.hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; }
-.hero__scroll {
-  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-  font-size: .7rem; letter-spacing: .3em; text-transform: uppercase; color: var(--grey-300);
-  padding-bottom: 3.5rem;
-}
-.hero__scroll::after {
-  content: ""; position: absolute; left: 50%; bottom: 0; width: 1px; height: 2.8rem;
-  background: var(--grey-300); animation: scrollLine 2s infinite;
-  transform-origin: top;
-}
-@keyframes scrollLine { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
 /* ---------- Marquee ---------- */
 .marquee { background: var(--black); color: var(--white); border-top: 1px solid #222; overflow: hidden; padding: 1.2rem 0; }
@@ -273,7 +227,7 @@ em { font-style: italic; font-weight: 400; }
 .reveal.visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .hero__bg, .marquee__track, .hero__scroll::after { animation: none; }
+  .marquee__track { animation: none; }
 }
 
 /* ---------- Responsive ---------- */
@@ -426,7 +380,6 @@ em { font-style: italic; font-weight: 400; }
 a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
   outline: 2px solid currentColor; outline-offset: 3px;
 }
-.hero { min-height: 100svh; }
 
 /* Instagram embeds: fixed columns that can't push past the screen edge */
 .ig-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -440,10 +393,6 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 }
 
 @media (max-width: 800px) {
-  /* Hero: stronger, even shade so text stays readable over busy photos */
-  .hero__overlay { background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.7) 50%, rgba(0,0,0,.85) 100%); }
-  .hero__scroll { display: none; }
-  .hero__content { padding-top: 7rem; padding-bottom: 4rem; }
   /* Nav logo a little smaller */
   .logo__img { width: 58px; height: 58px; }
   .nav.scrolled .logo__img { width: 46px; height: 46px; }
@@ -458,10 +407,6 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
   .section__head { margin-bottom: 2.75rem; }
   .eyebrow { letter-spacing: .2em; }
   .marquee span { font-size: 1.3rem; }
-
-  /* Hero buttons: equal, full width */
-  .hero__actions { flex-direction: column; }
-  .hero__text { font-size: 1rem; }
 
   /* About photo back to portrait on phones */
   .about__image { aspect-ratio: 4 / 5; }
@@ -478,6 +423,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
   .services__grid .card { scroll-snap-align: start; }
   .card:hover { transform: none; box-shadow: none; }
   .card__body { padding: 1.4rem 1.3rem 1.6rem; }
+
 
   /* How to order: compact rows, number beside the text */
   .steps { gap: .75rem; }
