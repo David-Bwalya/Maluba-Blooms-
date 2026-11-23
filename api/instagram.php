@@ -6,6 +6,10 @@
  *    the Instagram API, caches the result for `cache_minutes`, and renews the
  *    token automatically (tokens last 60 days; renewed every 7 days here).
  *  - Without a token: returns the manual backup list (shown as embeds).
+ *
+ * The GitHub Pages workflow (.github/workflows/pages.yml) runs this file
+ * from the command line every 6 hours and publishes its output as
+ * api/instagram-feed.json, since GitHub Pages itself can't run PHP.
  */
 declare(strict_types=1);
 
@@ -177,7 +181,10 @@ function fetch_all_posts(string $token): array
 }
 
 // ---------------------------------------------------------------------
-$token = current_token(trim((string) ($config['access_token'] ?? '')), $tokenFile);
+// The GitHub sync job passes the token as an environment variable (a GitHub
+// secret) so it never has to be written into config.php.
+$configToken = trim((string) (getenv('INSTAGRAM_ACCESS_TOKEN') ?: ($config['access_token'] ?? '')));
+$token = current_token($configToken, $tokenFile);
 if ($token === '') {
     respond(manual_payload($config['manual_posts'] ?? []));
 }

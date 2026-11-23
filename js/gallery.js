@@ -1,7 +1,8 @@
 // ============ Instagram gallery (homepage preview + gallery page) ============
 // Posts come from api/instagram.php (all posts synced from Instagram, or the
-// backup list until an access token is added). Where PHP doesn't run (e.g.
-// GitHub Pages), the backup list api/instagram-posts.json is read directly.
+// backup list until an access token is added). On GitHub Pages, where PHP
+// doesn't run, the sync job publishes the same data as api/instagram-feed.json;
+// failing that, the backup list api/instagram-posts.json is read directly.
 //
 // Markup: <div id="igGrid" data-ig="preview|full"></div>
 //   preview -> homepage: latest posts only (CSS shows 8 / 6 / 4 by screen size)
@@ -34,6 +35,7 @@
   });
 
   getJson("api/instagram.php")
+    .catch(() => getJson("api/instagram-feed.json"))
     .catch(() => getJson("api/instagram-posts.json").then(fromBackupList))
     .then(data => {
       posts = (data.posts || []).filter(p => p.permalink || p.src);
