@@ -35,6 +35,15 @@
       : load().filter(i => i.id !== id);
     save(items);
   }
+  // Toggle one colour on a cart line (rose items can mix several colours)
+  function toggleColour(id, colour) {
+    save(load().map(i => {
+      if (i.id !== id) return i;
+      const chosen = i.chosen || [];
+      return { ...i, chosen: chosen.includes(colour) ? chosen.filter(c => c !== colour) : [...chosen, colour] };
+    }));
+  }
+  const describe = i => i.name + (i.chosen?.length ? ` (${i.chosen.join(" + ")})` : "");
   const count = () => load().reduce((n, i) => n + i.qty, 0);
 
   // ---------- Helpers ----------
@@ -75,7 +84,10 @@
   // ---------- Price list rows -> cart ----------
   document.querySelectorAll(".price-rows button[data-id]").forEach(btn => {
     btn.addEventListener("click", () => {
-      add({ id: btn.dataset.id, name: btn.dataset.name, price: Number(btn.dataset.price) || 0, label: btn.dataset.label });
+      add({
+        id: btn.dataset.id, name: btn.dataset.name, price: Number(btn.dataset.price) || 0, label: btn.dataset.label,
+        colours: btn.dataset.colours ? btn.dataset.colours.split("|") : null, chosen: [],
+      });
       showToast(`Added <strong>${esc(btn.dataset.name)}</strong>. <a href="checkout.html">Go to checkout</a>`);
     });
   });
@@ -100,6 +112,11 @@
         <div class="cart-item__info">
           <h3>${esc(i.name)}</h3>
           <p class="cart-item__price">${i.price ? money(i.price) + " each" : esc(i.label) + " · quoted on WhatsApp"}</p>
+          ${i.colours ? `
+          <p class="chips__label">Colour${i.colours.length > 1 ? "s" : ""} <span>· pick one or more</span></p>
+          <div class="chips" role="group" aria-label="Rose colours">
+            ${i.colours.map(c => `<button type="button" data-colour="${esc(c)}" aria-pressed="${(i.chosen || []).includes(c)}">${esc(c)}</button>`).join("")}
+          </div>` : ""}
           <button type="button" class="cart-item__remove" data-remove>Remove</button>
         </div>
         <div class="qty" aria-label="Quantity">
@@ -115,6 +132,8 @@
       row.querySelector("[data-inc]").addEventListener("click", () => { setQty(id, item.qty + 1); renderCart(); });
       row.querySelector("[data-dec]").addEventListener("click", () => { setQty(id, item.qty - 1); renderCart(); });
       row.querySelector("[data-remove]").addEventListener("click", () => { setQty(id, 0); renderCart(); });
+      row.querySelectorAll("[data-colour]").forEach(chip =>
+        chip.addEventListener("click", () => { toggleColour(id, chip.dataset.colour); renderCart(); }));
     });
 
     const text = totalText(items);
@@ -156,7 +175,7 @@
     const items = load();
     return {
       items,
-      lines: items.map(i => `${i.qty} x ${i.name} – ${i.price ? money(i.price * i.qty) : "to be quoted (" + i.label + ")"}`),
+      lines: items.map(i => `${i.qty} x ${describe(i)} – ${i.price ? money(i.price * i.qty) : "to be quoted (" + i.label + ")"}`),
       name: f.get("name"), phone: f.get("phone"), email: f.get("email"),
       fulfilment: f.get("fulfilment") === "Delivery" ? `Delivery to: ${f.get("address")}` : "Pickup from the studio",
       date: f.get("date") || "Not specified",
@@ -194,6 +213,16 @@
     e.preventDefault();
     const o = orderDetails();
     if (!o.items.length) return;
+
+    // Rose items need at least one colour before the order goes through
+    const missing = o.items.find(i => i.colours && !(i.chosen || []).length);
+    if (missing) {
+      const row = list.querySelector(`.cart-item[data-id="${CSS.escape(missing.id)}"]`);
+      row?.classList.add("needs-colour");
+      row?.scrollIntoView({ behavior: "smooth", block: "center" });
+      showToast(`Please pick a colour for <strong>${esc(missing.name)}</strong>.`);
+      return;
+    }
     const t = totals(o.items);
     const canPay = payOnline && t.quotes === 0 && t.sum > 0;
 

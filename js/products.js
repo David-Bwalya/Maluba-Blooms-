@@ -3,12 +3,19 @@
 //  To change a price, edit the text below. Nothing else needs changing.
 //  Prices are written exactly as they should appear: "K1,400" for one
 //  price, "K650 – K1,500" for a range.
+//
+//  ROSE_COLOURS lists the colours a customer can pick in the cart for any
+//  group marked "colours: ROSE_COLOURS". Add or remove colours as stock
+//  changes.
 // =====================================================================
+const ROSE_COLOURS = ["Red", "White", "Pink", "Yellow", "Peach", "Orange", "Purple", "Blue"];
+
 const PRODUCTS = [
   {
     title: "Plain Roses",
     groups: [
       {
+        colours: ROSE_COLOURS,
         items: [
           ["40 stems", "K750"],
           ["60 stems", "K950"],
@@ -26,6 +33,7 @@ const PRODUCTS = [
       },
       {
         title: "Box of Roses",
+        colours: ROSE_COLOURS,
         items: [
           ["Extra small", "K1,800"],
           ["Small", "K2,500"],
@@ -66,6 +74,7 @@ const PRODUCTS = [
     groups: [
       {
         title: "Plain Roses",
+        colours: ROSE_COLOURS,
         items: [
           ["40 stems", "K1,500"],
           ["50 stems", "K2,000"],
@@ -181,6 +190,7 @@ const PRODUCTS = [
             return `
             <li>
               <button type="button" data-id="${esc(id)}" data-name="${esc(fullName)}" data-price="${value}" data-label="${esc(price)}"
+                      ${g.colours ? `data-colours="${esc(g.colours.join("|"))}"` : ""}
                       aria-label="Add ${esc(fullName)} (${esc(price)}) to cart">
                 <span class="name">${esc(name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(price)}</span><span class="add" aria-hidden="true">+</span>
               </button>
