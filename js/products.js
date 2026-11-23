@@ -4,11 +4,22 @@
 //  Prices are written exactly as they should appear: "K1,400" for one
 //  price, "K650 – K1,500" for a range.
 //
+//  PHOTOS: each group can have an "image" that is used for all of its
+//  items, and any single item can have its own photo as a third value:
+//      ["40 stems", "K750", "images/products/roses-40.jpg"],
+//  Items that share a photo are shown together on product-gallery.html;
+//  give an item its own photo and it gets its own card automatically.
+//  The current photos are generic stock images (TODO: replace with real
+//  Maluba Blooms photos). Items with no photo show "Photo coming soon".
+//
 //  ROSE_COLOURS lists the colours a customer can pick in the cart for any
 //  group marked "colours: ROSE_COLOURS". Add or remove colours as stock
 //  changes.
 // =====================================================================
 const ROSE_COLOURS = ["Red", "White", "Pink", "Yellow", "Peach", "Orange", "Purple", "Blue"];
+
+// Shorthand for the stock photos used below
+const stock = id => `https://images.unsplash.com/photo-${id}?w=900&q=80`;
 
 const PRODUCTS = [
   {
@@ -16,6 +27,7 @@ const PRODUCTS = [
     groups: [
       {
         colours: ROSE_COLOURS,
+        image: stock("1494972308805-463bc619d34e"),
         items: [
           ["40 stems", "K750"],
           ["60 stems", "K950"],
@@ -34,6 +46,7 @@ const PRODUCTS = [
       {
         title: "Box of Roses",
         colours: ROSE_COLOURS,
+        image: stock("1591886960571-74d43a9d4166"),
         items: [
           ["Extra small", "K1,800"],
           ["Small", "K2,500"],
@@ -50,6 +63,7 @@ const PRODUCTS = [
     groups: [
       {
         title: "Bouquets",
+        image: stock("1596438459194-f275f413d6ff"),
         items: [
           ["Small", "K1,200"],
           ["Medium", "K2,000"],
@@ -59,6 +73,7 @@ const PRODUCTS = [
       },
       {
         title: "Boxes",
+        image: stock("1487530811176-3780de880c2d"),
         items: [
           ["Small", "K1,700"],
           ["Medium", "K2,500"],
@@ -75,6 +90,7 @@ const PRODUCTS = [
       {
         title: "Plain Roses",
         colours: ROSE_COLOURS,
+        image: stock("1495231916356-a86217efff12"),
         items: [
           ["40 stems", "K1,500"],
           ["50 stems", "K2,000"],
@@ -88,12 +104,12 @@ const PRODUCTS = [
       {
         title: "Seasonal Flowers (per bunch)",
         items: [
-          ["St Joseph’s Lilies", "K850"],
-          ["Tulips", "K1,000"],
-          ["Peonies", "K1,000"],
-          ["Chrysanthemums", "K450"],
+          ["St Joseph’s Lilies", "K850", stock("1469259943454-aa100abba749")],
+          ["Tulips", "K1,000", stock("1561181286-d3fee7d55364")],
+          ["Peonies", "K1,000", stock("1582794543139-8ac9cb0f7b11")],
+          ["Chrysanthemums", "K450", stock("1606041008023-472dfb5e530f")],
           ["Hydrangeas", "K1,200"],
-          ["Orchids", "K650"],
+          ["Orchids", "K650", stock("1534885320675-b08aa131cc5e")],
           ["Carnations", "K450"],
         ],
       },
@@ -104,6 +120,7 @@ const PRODUCTS = [
     groups: [
       {
         title: "Sunflowers",
+        image: stock("1455659817273-f96807779a8a"),
         items: [
           ["Small", "K650"],
           ["Medium", "K1,200"],
@@ -112,6 +129,7 @@ const PRODUCTS = [
       },
       {
         title: "Table Centre Piece",
+        image: stock("1457089328109-e5d9bd499191"),
         items: [
           ["Small", "K450"],
           ["Medium", "K650"],
@@ -125,6 +143,7 @@ const PRODUCTS = [
     groups: [
       {
         title: "Wedding Bouquets",
+        image: stock("1519741497674-611481863552"),
         items: [
           ["Bridal bouquet", "K650 – K1,500"],
           ["Bridesmaid’s bouquet", "K450 – K1,000"],
@@ -164,39 +183,113 @@ const PRODUCTS = [
 ];
 
 // ---------------------------------------------------------------------
-//  Renders the list above into <div id="priceList"> (no need to edit).
-//  Each row is a button: tapping it adds the item to the cart (js/cart.js).
+//  Rendering (no need to edit).
+//  - <div id="priceList">       homepage: name links to the photo page,
+//                               "+" adds the item to the cart (js/cart.js)
+//  - <div id="productGallery">  product-gallery.html: one card per photo,
+//                               listing the items that use it
 //  A price range (e.g. "K650 – K1,500") can't be charged online, so those
 //  items go into the cart as "quote" items and are confirmed on WhatsApp.
 // ---------------------------------------------------------------------
 (function () {
-  const root = document.getElementById("priceList");
-  if (!root) return;
   const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  // "K1,400" -> 1400; a range like "K650 – K1,500" -> 0 (quote needed)
   const priceValue = p => /[–-]/.test(p) ? 0 : Number(String(p).replace(/[^0-9.]/g, "")) || 0;
 
-  root.innerHTML = PRODUCTS.map((cat, i) => `
-    <section class="price-cat" aria-labelledby="cat-${i}">
-      <h3 id="cat-${i}">${esc(cat.title)}</h3>
-      ${cat.groups.map(g => `
-        ${g.title ? `<h4>${esc(g.title)}</h4>` : ""}
-        <ul class="price-rows">
-          ${g.items.map(([name, price]) => {
-            const fullName = `${cat.title}${g.title ? " · " + g.title : ""} – ${name}`;
-            const id = slug(fullName);
-            const value = priceValue(price);
-            return `
+  // Flatten the data into one record per item
+  const items = [];
+  PRODUCTS.forEach((cat, ci) => cat.groups.forEach((g, gi) => g.items.forEach(([name, price, image]) => {
+    const fullName = `${cat.title}${g.title ? " · " + g.title : ""} – ${name}`;
+    items.push({
+      id: slug(fullName), name, fullName, price, value: priceValue(price),
+      image: image || g.image || cat.image || "",
+      colours: g.colours || null, cat: ci, group: gi,
+    });
+  })));
+
+  // The "+" button; js/cart.js listens for clicks on it
+  const addButton = it => `
+    <button type="button" class="add" data-id="${esc(it.id)}" data-name="${esc(it.fullName)}" data-price="${it.value}" data-label="${esc(it.price)}"
+            ${it.colours ? `data-colours="${esc(it.colours.join("|"))}"` : ""}
+            aria-label="Add ${esc(it.fullName)} (${esc(it.price)}) to cart">+</button>`;
+
+  // ----- Homepage price list -----
+  const list = document.getElementById("priceList");
+  if (list) {
+    list.innerHTML = PRODUCTS.map((cat, ci) => `
+      <section class="price-cat" aria-labelledby="cat-${ci}">
+        <h3 id="cat-${ci}">${esc(cat.title)}</h3>
+        ${cat.groups.map((g, gi) => `
+          ${g.title ? `<h4>${esc(g.title)}</h4>` : ""}
+          <ul class="price-rows">
+            ${items.filter(it => it.cat === ci && it.group === gi).map(it => `
             <li>
-              <button type="button" data-id="${esc(id)}" data-name="${esc(fullName)}" data-price="${value}" data-label="${esc(price)}"
-                      ${g.colours ? `data-colours="${esc(g.colours.join("|"))}"` : ""}
-                      aria-label="Add ${esc(fullName)} (${esc(price)}) to cart">
-                <span class="name">${esc(name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(price)}</span><span class="add" aria-hidden="true">+</span>
-              </button>
-            </li>`;
+              <a class="row" href="product-gallery.html#${esc(it.id)}" aria-label="${esc(it.fullName)}, ${esc(it.price)}. See photo">
+                <span class="name">${esc(it.name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(it.price)}</span>
+              </a>
+              ${addButton(it)}
+            </li>`).join("")}
+          </ul>
+          ${g.note ? `<p class="price-note">${esc(g.note)}</p>` : ""}`).join("")}
+      </section>`).join("");
+  }
+
+  // ----- Product gallery page -----
+  const gallery = document.getElementById("productGallery");
+  if (gallery) {
+    gallery.innerHTML = PRODUCTS.map((cat, ci) => {
+      // Within a category, items sharing a photo (or having none) share a card
+      const cards = [];
+      items.filter(it => it.cat === ci).forEach(it => {
+        const key = it.image || `none-${it.group}`;
+        let card = cards.find(c => c.key === key);
+        if (!card) cards.push(card = { key, image: it.image, items: [], group: cat.groups[it.group] });
+        card.items.push(it);
+      });
+      return `
+      <section class="pg-cat" id="pg-cat-${ci}">
+        <h2 class="pg-cat__title">${esc(cat.title)}</h2>
+        <div class="pg-grid">
+          ${cards.map(card => {
+            const title = card.items.length === 1 ? card.items[0].name : (card.group.title || cat.title);
+            const ids = card.items.map(it => it.id);
+            return `
+            <article class="pg-card" id="${esc(ids[0])}" data-ids="${esc(ids.join(" "))}">
+              ${card.image
+                ? `<div class="pg-card__img"><img src="${esc(card.image)}" alt="${esc(title)}" loading="lazy" decoding="async"></div>`
+                : `<div class="pg-card__img pg-card__img--none"><span>Photo coming soon</span></div>`}
+              <div class="pg-card__body">
+                <h3>${esc(title)}</h3>
+                ${card.items.length > 1 && card.group.title && card.group.title !== title ? `<p class="pg-card__sub">${esc(card.group.title)}</p>` : ""}
+                <ul class="price-rows">
+                  ${card.items.map(it => `
+                  <li id="${card.items.length > 1 ? esc(it.id) : ""}">
+                    <span class="row"><span class="name">${esc(it.name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(it.price)}</span></span>
+                    ${addButton(it)}
+                  </li>`).join("")}
+                </ul>
+                ${card.group.note ? `<p class="price-note">${esc(card.group.note)}</p>` : ""}
+              </div>
+            </article>`;
           }).join("")}
-        </ul>
-        ${g.note ? `<p class="price-note">${esc(g.note)}</p>` : ""}`).join("")}
-    </section>`).join("");
+        </div>
+      </section>`;
+    }).join("");
+
+    // Arriving from a price-list link: highlight that item's card and row
+    function focusTarget() {
+      const id = decodeURIComponent(location.hash.slice(1));
+      gallery.querySelectorAll(".is-target").forEach(el => el.classList.remove("is-target"));
+      if (!id) return;
+      const card = gallery.querySelector(`.pg-card[data-ids~="${CSS.escape(id)}"]`);
+      if (!card) return;
+      card.classList.add("is-target");
+      const row = card.querySelector(`#${CSS.escape(id)}`);
+      if (row) row.classList.add("is-target");
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    window.addEventListener("hashchange", focusTarget);
+    // Wait a tick so the fixed nav offset and lazy images settle
+    setTimeout(focusTarget, 50);
+  }
 })();

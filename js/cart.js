@@ -82,7 +82,7 @@
   }
 
   // ---------- Price list rows -> cart ----------
-  document.querySelectorAll(".price-rows button[data-id]").forEach(btn => {
+  document.querySelectorAll(".price-rows .add[data-id]").forEach(btn => {
     btn.addEventListener("click", () => {
       add({
         id: btn.dataset.id, name: btn.dataset.name, price: Number(btn.dataset.price) || 0, label: btn.dataset.label,

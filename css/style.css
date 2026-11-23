@@ -487,23 +487,48 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 .nav.menu-open .nav__cart { color: var(--white); z-index: 2; }
 .nav.menu-open .nav__cart-count { background: var(--white); color: var(--black); }
 
-/* Price rows are buttons: tap to add to cart */
-.price-rows li { padding: 0; }
-.price-rows button {
-  display: flex; align-items: baseline; gap: .6rem; width: 100%;
-  padding: .6rem 0; background: none; border: 0; border-radius: 0;
-  font: inherit; color: inherit; text-align: left; cursor: pointer;
+/* Price rows: the name links to the product photo, the "+" adds to cart */
+.price-rows li { display: flex; align-items: center; gap: .6rem; padding: 0; }
+.price-rows .row {
+  flex: 1; min-width: 0; display: flex; align-items: baseline; gap: .6rem;
+  padding: .6rem 0; color: inherit;
 }
+.price-rows .row .name { min-width: 0; }
+.price-rows a.row:hover .name, .price-rows a.row:focus-visible .name { color: var(--black); text-decoration: underline; text-underline-offset: 3px; }
+/* 36px tap target drawn as a small 1.5rem circle */
 .price-rows .add {
-  align-self: center; flex-shrink: 0;
-  width: 1.5rem; height: 1.5rem; border: 1px solid var(--grey-300); border-radius: 50%;
+  flex-shrink: 0; position: relative; isolation: isolate;
+  width: 2.25rem; height: 2.25rem; margin-right: -.35rem; padding: 0;
+  background: none; border: 0; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 1rem; line-height: 1; color: var(--grey-500);
-  transition: background .25s, color .25s, border-color .25s;
+  font: inherit; font-size: 1.1rem; line-height: 1; color: var(--grey-500); cursor: pointer;
 }
-.price-rows button:hover .name, .price-rows button:focus-visible .name { color: var(--black); }
-.price-rows button:hover .add, .price-rows button:focus-visible .add,
-.price-rows button:active .add { background: var(--black); color: var(--white); border-color: var(--black); }
+.price-rows .add::before {
+  content: ""; position: absolute; inset: .35rem; z-index: -1;
+  border: 1px solid var(--grey-300); border-radius: 50%;
+  transition: background .25s, border-color .25s;
+}
+.price-rows .add:hover, .price-rows .add:focus-visible, .price-rows .add:active { color: var(--white); }
+.price-rows .add:hover::before, .price-rows .add:focus-visible::before, .price-rows .add:active::before { background: var(--black); border-color: var(--black); }
+
+/* Product photo page */
+.product-gallery { padding-top: clamp(2.5rem, 5vw, 4rem); }
+.pg-cat + .pg-cat { margin-top: clamp(3.5rem, 7vw, 5rem); }
+.pg-cat__title { font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 1.5rem; padding-bottom: .7rem; border-bottom: 1px solid var(--black); }
+.pg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start; }
+.pg-card { border: 1px solid var(--grey-300); scroll-margin-top: 7rem; transition: box-shadow .3s; }
+.pg-card.is-target { box-shadow: 0 0 0 2px var(--black); }
+.pg-card__img { aspect-ratio: 4 / 5; overflow: hidden; background: var(--grey-100); }
+.pg-card__img--none { display: flex; align-items: center; justify-content: center; color: var(--grey-500); font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; }
+.pg-card__body { padding: 1.2rem 1.2rem 1.3rem; }
+.pg-card__body h3 { font-size: 1.5rem; margin-bottom: .1rem; }
+.pg-card__sub { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--grey-500); margin-bottom: .4rem; }
+.pg-card .price-rows { margin-top: .5rem; }
+.pg-card .price-rows li { font-size: .95rem; }
+.pg-card .price-rows .row { padding: .45rem 0; }
+.pg-card .price-rows li.is-target .name, .pg-card .price-rows li.is-target .price { color: var(--black); font-weight: 500; }
+.pg-card .price-rows li.is-target .name { text-decoration: underline; text-underline-offset: 3px; }
+.pg-card .price-note { margin-top: .6rem; }
 
 /* "Added to cart" message */
 .toast {
@@ -581,9 +606,17 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 /* Phone: sticky total + pay button at the bottom */
 .checkout-bar { display: none; }
 
+@media (max-width: 1024px) {
+  .pg-grid { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 800px) {
   .nav__right { gap: 1rem; }
   .checkout__grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+@media (max-width: 600px) {
+  .pg-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .pg-card { scroll-margin-top: 6rem; }
+  .pg-card__img { aspect-ratio: 1 / 1; }
 }
 @media (max-width: 600px) {
   .cart-item { align-items: flex-start; }
