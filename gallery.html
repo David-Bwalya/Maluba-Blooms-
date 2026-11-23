@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Maluba Blooms</title>
+  <meta name="description" content="Every bouquet, arrangement and video from Maluba Blooms on Instagram.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+  <link rel="apple-touch-icon" href="images/logo.jpg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <nav class="nav__links" id="navLinks">
+        <a href="index.html#about">About</a>
+        <a href="index.html#services">Services</a>
+        <a href="gallery.html" aria-current="page">Gallery</a>
+        <a href="index.html#order">How to Order</a>
+        <a href="index.html#contact" class="btn btn--small">Order Now</a>
+      </nav>
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ PAGE HEADER ============ -->
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Our Work</p>
+      <h1>The <em>Gallery</em></h1>
+      <p class="page-head__sub">Every bouquet, arrangement and video from our Instagram — newest first.</p>
+    </div>
+  </section>
+
+  <!-- ============ ALL POSTS ============ -->
+  <section class="section gallery gallery-page">
+    <div class="container">
+      <div class="ig-filters" id="igFilters" role="group" aria-label="Filter posts" hidden>
+        <button type="button" data-filter="all" aria-pressed="true">All <span class="count"></span></button>
+        <button type="button" data-filter="image" aria-pressed="false">Photos <span class="count"></span></button>
+        <button type="button" data-filter="video" aria-pressed="false">Videos <span class="count"></span></button>
+      </div>
+
+      <p class="ig-status" id="igLoading">Loading posts…</p>
+      <p class="ig-status" id="igSyncNotice" hidden>
+        <span id="igSyncNoticeMessage"></span>
+        <a href="https://www.instagram.com/maluba_blooms" target="_blank" rel="noopener">View Instagram &rarr;</a>
+      </p>
+      <p class="ig-status" id="igStatus" hidden>
+        We couldn't load the gallery right now.
+        <a class="link-arrow" href="https://www.instagram.com/maluba_blooms" target="_blank" rel="noopener">See our posts on Instagram &rarr;</a>
+      </p>
+
+      <!-- All Instagram posts, inserted by js/gallery.js -->
+      <div class="ig-grid" id="igGrid" data-ig="full" hidden></div>
+
+      <div class="center btn-row">
+        <a href="https://www.instagram.com/maluba_blooms" target="_blank" rel="noopener" class="btn">Follow @maluba_blooms</a>
+        <a href="index.html#contact" class="btn btn--outline">Order Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="index.html" class="logo logo--light"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <nav class="footer__links">
+        <a href="index.html#about">About</a>
+        <a href="index.html#services">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="https://www.instagram.com/maluba_blooms" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+      <p class="footer__copy">© <span id="year"></span> Maluba Blooms. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

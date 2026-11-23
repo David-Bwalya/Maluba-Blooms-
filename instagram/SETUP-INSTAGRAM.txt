@@ -1,0 +1,43 @@
+HOW TO CONNECT INSTAGRAM (one-time setup, about 10 minutes, free)
+==================================================================
+
+Once connected, the website shows EVERY post from @maluba_blooms (old and
+new) and picks up new posts by itself within 30 minutes of you posting.
+Until then, the site shows the backup list of posts in config.php.
+
+STEP 1 - Make the Instagram account a Professional account
+  In the Instagram app: Settings > Account type and tools >
+  Switch to professional account > choose "Business" or "Creator".
+  (Free. Nothing changes for your followers.)
+
+STEP 2 - Create a Meta developer app
+  1. Go to https://developers.facebook.com and log in with Facebook.
+     Click "Get Started" if it's your first time.
+  2. Click "My Apps" > "Create App".
+  3. Give it a name, e.g. "Maluba Blooms Website".
+  4. When asked for a use case, choose:
+       "Manage messaging & content on Instagram"
+  5. Finish creating the app.
+
+STEP 3 - Generate the access token
+  1. In the app dashboard, open:
+       Instagram > "API setup with Instagram login"
+  2. Under "Generate access tokens", click "Add account" and log in
+     as maluba_blooms. Allow the permissions it asks for.
+  3. Click "Generate token" next to the account, then copy the long token.
+
+STEP 4 - Paste it into the website
+  Open instagram/config.php and paste the token between the quotes:
+
+      'access_token' => 'PASTE-THE-TOKEN-HERE',
+
+  Save the file and refresh the website. Done.
+
+NOTES
+  - The token lasts 60 days, but the website renews it by itself every week.
+    It only expires if nobody visits the site for about 2 months. If that
+    happens, repeat Step 3 and Step 4.
+  - The website must be hosted somewhere that runs PHP (most hosting does;
+    XAMPP does on this computer).
+  - Keep the token private. The instagram/ folder is locked so website
+    visitors can't open it.
