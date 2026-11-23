@@ -14,10 +14,7 @@
   const PREVIEW_TILES = 8;   // CSS hides some of these on smaller screens
   const PREVIEW_EMBEDS = 3;  // embeds are tall; fewer on the homepage
 
-  const ICONS = {
-    video: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
-    carousel: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11a2 2 0 0 1 2 2v11H6a2 2 0 0 1-2-2zm4-4h10a2 2 0 0 1 2 2v10h-1.5V5.5H8z"/></svg>',
-  };
+  const DEFAULT_ALT = "Maluba Blooms arrangement";
 
   let posts = [];
 
@@ -46,8 +43,8 @@
         const isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
         if (notice && message && isLocal) {
           message.textContent = data.error
-            ? "Automatic Instagram sync is unavailable; showing saved posts. "
-            : "Automatic Instagram sync isn't connected; showing saved posts. ";
+            ? "Automatic gallery sync is unavailable; showing saved posts."
+            : "Automatic gallery sync isn't connected; showing saved posts.";
           notice.hidden = false;
         }
       }
@@ -105,11 +102,9 @@
     const draw = () => {
       const list = mode === "preview" ? posts.slice(0, PREVIEW_TILES) : posts.filter(matches);
       grid.innerHTML = list.map(p => {
-        const badge = p.type === "carousel" ? ICONS.carousel : (p.type === "video" ? ICONS.video : "");
-        const alt = shortCaption(p.caption) || "Maluba Blooms Instagram post";
+        const alt = shortCaption(p.caption) || DEFAULT_ALT;
         return `<button type="button" class="ig-tile" data-id="${escapeAttr(p.id)}" aria-label="Open: ${escapeAttr(alt)}">
           <img src="${escapeAttr(p.src)}" alt="${escapeAttr(alt)}" loading="lazy" decoding="async">
-          ${badge ? `<span class="ig-tile__badge">${badge}</span>` : ""}
         </button>`;
       }).join("");
       grid.querySelectorAll(".ig-tile").forEach(t =>
@@ -160,7 +155,6 @@
         <p class="lightbox__caption"></p>
         <div class="lightbox__row">
           <span class="lightbox__count"></span>
-          <a class="lightbox__link" target="_blank" rel="noopener">View on Instagram &rarr;</a>
         </div>
       </div>`;
     document.body.appendChild(lb);
@@ -223,12 +217,11 @@
     } else {
       el = document.createElement("img");
       el.src = item.src;
-      el.alt = shortCaption(post.caption) || "Maluba Blooms Instagram post";
+      el.alt = shortCaption(post.caption) || DEFAULT_ALT;
     }
     stage.appendChild(el);
     lb.querySelector(".lightbox__caption").textContent = post.caption || "";
     lb.querySelector(".lightbox__count").textContent = total > 1 ? `${ii + 1} / ${total}` : formatDate(post.timestamp);
-    lb.querySelector(".lightbox__link").href = post.permalink;
   }
 
   // ---------- Helpers ----------
