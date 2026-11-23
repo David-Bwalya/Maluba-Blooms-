@@ -18,17 +18,23 @@
   <header class="nav" id="nav">
     <div class="container nav__inner">
       <a href="#products" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
-      <nav class="nav__links" id="navLinks">
-        <a href="#products">Products</a>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="#order">How to Order</a>
-        <a href="#contact" class="btn btn--small">Order Now</a>
-      </nav>
-      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
-        <span></span><span></span>
-      </button>
+      <div class="nav__right">
+        <nav class="nav__links" id="navLinks">
+          <a href="#products">Products</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="#order">How to Order</a>
+          <a href="#contact" class="btn btn--small">Contact</a>
+        </nav>
+        <a href="checkout.html" class="nav__cart" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="nav__cart-count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -38,12 +44,13 @@
       <div class="section__head">
         <p class="eyebrow">Price List</p>
         <h2>Our <em>Products</em></h2>
-        <p class="section__sub">Fresh flowers, boxes and extras. Prices in Kwacha; all pieces can be tailored to your occasion.</p>
+        <p class="section__sub">Fresh flowers, boxes and extras, priced in Kwacha. Tap an item to add it to your cart, then pay with Airtel Money or card at checkout.</p>
       </div>
       <!-- Price list is filled in from js/products.js (edit prices there) -->
       <div class="price-list" id="priceList"></div>
       <div class="center btn-row">
-        <a href="#contact" class="btn" id="orderWhatsApp">Order on WhatsApp</a>
+        <a href="checkout.html" class="btn">Go to checkout <span data-cart-count-inline></span></a>
+        <a href="#contact" class="btn btn--outline" id="orderWhatsApp">Order on WhatsApp</a>
       </div>
     </div>
   </section>
@@ -218,5 +225,6 @@
 
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
 </body>
 </html>

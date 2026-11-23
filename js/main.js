@@ -2,6 +2,14 @@
 // WhatsApp number (country code, no + or spaces)
 const WHATSAPP_NUMBER = "260971234567";
 
+// Online payments (Airtel Money + card) at checkout.html run through
+// Flutterwave. Paste the PUBLIC key from the Flutterwave dashboard
+// (Settings > API keys) between the quotes. Test keys start with
+// FLWPUBK_TEST-, live keys with FLWPUBK-. While this is empty, checkout
+// sends the order on WhatsApp and payment is arranged there.
+// Never put the SECRET key anywhere in this website.
+const FLUTTERWAVE_PUBLIC_KEY = "";
+
 // Instagram posts: see instagram/config.php and api/instagram-posts.json (gallery code is in js/gallery.js)
 
 // ============ Nav: change style on scroll ============

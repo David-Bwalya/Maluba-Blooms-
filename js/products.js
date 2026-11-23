@@ -156,19 +156,36 @@ const PRODUCTS = [
 
 // ---------------------------------------------------------------------
 //  Renders the list above into <div id="priceList"> (no need to edit).
+//  Each row is a button: tapping it adds the item to the cart (js/cart.js).
+//  A price range (e.g. "K650 – K1,500") can't be charged online, so those
+//  items go into the cart as "quote" items and are confirmed on WhatsApp.
 // ---------------------------------------------------------------------
 (function () {
   const root = document.getElementById("priceList");
   if (!root) return;
-  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  // "K1,400" -> 1400; a range like "K650 – K1,500" -> 0 (quote needed)
+  const priceValue = p => /[–-]/.test(p) ? 0 : Number(String(p).replace(/[^0-9.]/g, "")) || 0;
+
   root.innerHTML = PRODUCTS.map((cat, i) => `
     <section class="price-cat" aria-labelledby="cat-${i}">
       <h3 id="cat-${i}">${esc(cat.title)}</h3>
       ${cat.groups.map(g => `
         ${g.title ? `<h4>${esc(g.title)}</h4>` : ""}
         <ul class="price-rows">
-          ${g.items.map(([name, price]) => `
-            <li><span class="name">${esc(name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(price)}</span></li>`).join("")}
+          ${g.items.map(([name, price]) => {
+            const fullName = `${cat.title}${g.title ? " · " + g.title : ""} – ${name}`;
+            const id = slug(fullName);
+            const value = priceValue(price);
+            return `
+            <li>
+              <button type="button" data-id="${esc(id)}" data-name="${esc(fullName)}" data-price="${value}" data-label="${esc(price)}"
+                      aria-label="Add ${esc(fullName)} (${esc(price)}) to cart">
+                <span class="name">${esc(name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(price)}</span><span class="add" aria-hidden="true">+</span>
+              </button>
+            </li>`;
+          }).join("")}
         </ul>
         ${g.note ? `<p class="price-note">${esc(g.note)}</p>` : ""}`).join("")}
     </section>`).join("");

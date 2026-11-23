@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — Maluba Blooms</title>
+  <meta name="description" content="Review your Maluba Blooms order and pay with Airtel Money or card.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+  <link rel="apple-touch-icon" href="images/logo.jpg">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Flutterwave hosted checkout (Airtel Money + card). Used only when a public key is set in js/main.js -->
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <div class="nav__right">
+        <nav class="nav__links" id="navLinks">
+          <a href="index.html#products">Products</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#services">Services</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="index.html#order">How to Order</a>
+          <a href="index.html#contact" class="btn btn--small">Contact</a>
+        </nav>
+        <a href="checkout.html" class="nav__cart" aria-label="Cart" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="nav__cart-count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PAGE HEADER ============ -->
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Your Order</p>
+      <h1>Check<em>out</em></h1>
+      <p class="page-head__sub">Review your items, add your details and pay with Airtel Money or card.</p>
+    </div>
+  </section>
+
+  <!-- ============ CHECKOUT ============ -->
+  <section class="section checkout">
+    <div class="container">
+
+      <div class="checkout-msg" id="checkoutDone" hidden>
+        <p class="eyebrow">Thank you</p>
+        <h2 id="doneTitle"></h2>
+        <p id="doneText"></p>
+        <div class="btn-row">
+          <a id="doneWhatsApp" class="btn" href="#" target="_blank" rel="noopener">Open WhatsApp</a>
+          <a href="index.html#products" class="btn btn--outline">Back to products</a>
+        </div>
+      </div>
+
+      <div class="checkout-msg" id="cartEmpty" hidden>
+        <h2>Your cart is <em>empty.</em></h2>
+        <p>Tap any item in the price list to add it.</p>
+        <div class="btn-row"><a href="index.html#products" class="btn">See the price list</a></div>
+      </div>
+
+      <div class="checkout__grid" id="checkoutGrid" hidden>
+        <div class="checkout__cart">
+          <h2 class="checkout__title">Your <em>cart</em></h2>
+          <ul class="cart-list" id="cartList"></ul>
+          <div class="cart-total">
+            <span>Total</span>
+            <strong id="cartTotal"></strong>
+          </div>
+        </div>
+
+        <form class="form form--light" id="checkoutForm">
+          <h2 class="checkout__title">Your <em>details</em></h2>
+          <div class="form__row">
+            <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+            <label>Phone<input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="097 1234567" required></label>
+          </div>
+          <label>Email<input type="email" name="email" autocomplete="email" inputmode="email" placeholder="For your payment receipt" required></label>
+          <fieldset class="form__choices">
+            <legend>Delivery or pickup</legend>
+            <label><input type="radio" name="fulfilment" value="Delivery" checked>Delivery</label>
+            <label><input type="radio" name="fulfilment" value="Pickup">Pickup</label>
+          </fieldset>
+          <label id="addressField">Delivery address<input type="text" name="address" autocomplete="street-address" placeholder="Area, street, landmark"></label>
+          <label>Date needed<input type="date" name="date"></label>
+          <label>Card message or notes<textarea name="message" rows="3" placeholder="Message for the card, colours, anything we should know…"></textarea></label>
+
+          <fieldset class="form__choices" id="payOptions" hidden>
+            <legend>Pay with</legend>
+            <label><input type="radio" name="method" value="airtel" checked>Airtel Money</label>
+            <label><input type="radio" name="method" value="card">Card</label>
+          </fieldset>
+          <p class="form__note form__note--left" id="payUnavailable" hidden></p>
+
+          <button type="submit" class="btn btn--full btn--desktop" id="submitBtn">Pay</button>
+          <p class="form__note">Payments are processed securely by Flutterwave. We never see your card or Airtel Money PIN.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phone: sticky total + button -->
+  <div class="checkout-bar">
+    <div><span class="checkout-bar__label">Total</span><strong id="barTotal"></strong></div>
+    <button type="submit" form="checkoutForm" class="btn" id="barBtn">Pay</button>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="index.html" class="logo logo--light"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <nav class="footer__links">
+        <a href="index.html#about">About</a>
+        <a href="index.html#services">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <p class="footer__copy">© <span id="year"></span> Maluba Blooms. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>
