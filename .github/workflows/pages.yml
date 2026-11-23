@@ -59,7 +59,7 @@ jobs:
         # Only public files are published; PHP code and the instagram/ folder stay off the site.
         run: |
           mkdir -p _site/api
-          cp -r index.html gallery.html css js images _site/
+          cp -r *.html css js images _site/
           cp api/instagram-posts.json _site/api/
           cp feed.json _site/api/instagram-feed.json
 

@@ -21,10 +21,15 @@
       <nav class="nav__links" id="navLinks">
         <a href="index.html#about">About</a>
         <a href="index.html#services">Services</a>
+        <a href="shop.html">Shop</a>
         <a href="gallery.html" aria-current="page">Gallery</a>
         <a href="index.html#order">How to Order</a>
         <a href="index.html#contact" class="btn btn--small">Order Now</a>
       </nav>
+      <button type="button" class="nav__cart" data-cart-open aria-label="Open cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8h13l-1.2 12H6.7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+        <span class="nav__cart-count" data-cart-count hidden>0</span>
+      </button>
       <button class="nav__toggle" id="navToggle" aria-label="Open menu">
         <span></span><span></span>
       </button>
@@ -73,6 +78,7 @@
       <nav class="footer__links">
         <a href="index.html#about">About</a>
         <a href="index.html#services">Services</a>
+        <a href="shop.html">Shop</a>
         <a href="gallery.html">Gallery</a>
         <a href="index.html#contact">Contact</a>
       </nav>
@@ -82,5 +88,7 @@
 
   <script src="js/main.js"></script>
   <script src="js/gallery.js"></script>
+  <script src="js/shop-data.js"></script>
+  <script src="js/cart.js"></script>
 </body>
 </html>

@@ -21,10 +21,15 @@
       <nav class="nav__links" id="navLinks">
         <a href="#about">About</a>
         <a href="#services">Services</a>
+        <a href="shop.html">Shop</a>
         <a href="#gallery">Gallery</a>
         <a href="#order">How to Order</a>
         <a href="#contact" class="btn btn--small">Order Now</a>
       </nav>
+      <button type="button" class="nav__cart" data-cart-open aria-label="Open cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8h13l-1.2 12H6.7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+        <span class="nav__cart-count" data-cart-count hidden>0</span>
+      </button>
       <button class="nav__toggle" id="navToggle" aria-label="Open menu">
         <span></span><span></span>
       </button>
@@ -44,7 +49,7 @@
       <h1>Flowers that<br><em>say it for you.</em></h1>
       <p class="hero__text">Handcrafted bouquets, event florals and thoughtful gifts, made with care for every occasion.</p>
       <div class="hero__actions">
-        <a href="#contact" class="btn btn--light">Order a Bouquet</a>
+        <a href="shop.html" class="btn btn--light">Shop Now</a>
         <a href="#gallery" class="btn btn--outline-light">View Our Work</a>
       </div>
     </div>
@@ -121,6 +126,22 @@
             <p>Fresh flowers delivered to homes, offices and venues, right on time.</p>
           </div>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOP NOW ============ -->
+  <section class="section shop-preview" id="shop">
+    <div class="container">
+      <div class="section__head reveal">
+        <p class="eyebrow">Shop Now</p>
+        <h2>Ready-to-order <em>Packages</em></h2>
+        <p class="section__sub">Choose a package, add it to your cart and pay with mobile money or card.</p>
+      </div>
+      <!-- Featured products from js/shop-data.js (featured: true) -->
+      <div class="products products--featured" id="shopGrid" data-shop="featured"></div>
+      <div class="center btn-row">
+        <a href="shop.html" class="btn">View all packages</a>
       </div>
     </div>
   </section>
@@ -241,6 +262,7 @@
       <nav class="footer__links">
         <a href="#about">About</a>
         <a href="#services">Services</a>
+        <a href="shop.html">Shop</a>
         <a href="#gallery">Gallery</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -250,5 +272,8 @@
 
   <script src="js/main.js"></script>
   <script src="js/gallery.js"></script>
+  <script src="js/shop-data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/shop.js"></script>
 </body>
 </html>
