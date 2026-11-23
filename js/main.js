@@ -2,7 +2,7 @@
 // TODO: put the real WhatsApp number here (country code, no + or spaces)
 const WHATSAPP_NUMBER = "260000000000";
 
-// Instagram posts: see instagram/config.php (gallery code is in js/gallery.js)
+// Instagram posts: see instagram/config.php and api/instagram-posts.json (gallery code is in js/gallery.js)
 
 // ============ Nav: change style on scroll ============
 const nav = document.getElementById("nav");

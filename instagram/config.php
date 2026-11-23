@@ -13,24 +13,10 @@ return [
     // 2) HOW OFTEN TO CHECK INSTAGRAM FOR NEW POSTS (minutes)
     'cache_minutes' => 30,
 
-    // 3) BACKUP LIST
-    // Used only while 'access_token' above is empty (or if Instagram
-    // can't be reached). Newest first. On Instagram: open a post,
-    // then tap ... and Copy link, and paste it below in quotes.
-    'manual_posts' => [
-        "https://www.instagram.com/maluba_blooms/p/DfhOpnFjcz4/",
-        "https://www.instagram.com/maluba_blooms/p/Dfhqex_jZul/",
-        "https://www.instagram.com/maluba_blooms/reel/Dfg3M0yN3CZ/",
-        "https://www.instagram.com/maluba_blooms/p/Dfb37FGDX0z/",
-        "https://www.instagram.com/maluba_blooms/p/DfR-WoujXkm/",
-        "https://www.instagram.com/maluba_blooms/p/De_gZjkDYRc/",
-        "https://www.instagram.com/maluba_blooms/p/DeZxM7YDRR7/",
-        "https://www.instagram.com/maluba_blooms/reel/DeJV_4dtnCx/",
-        "https://www.instagram.com/maluba_blooms/reel/Ddtm4XYNmny/",
-        "https://www.instagram.com/maluba_blooms/reel/DcyVuMvti-c/",
-        "https://www.instagram.com/maluba_blooms/p/DciRwXijZeh/",
-        "https://www.instagram.com/maluba_blooms/p/DcIydkltoHO/",
-        "https://www.instagram.com/maluba_blooms/p/DbQiypCjahh/",
-        "https://www.instagram.com/maluba_blooms/p/DbU06XojZrH/",
-    ],
+    // 3) BACKUP LIST -> edit api/instagram-posts.json
+    // Used while 'access_token' above is empty (or if Instagram can't be
+    // reached), and always on hosts without PHP such as GitHub Pages.
+    // Newest first. On Instagram: open a post, tap ... > Copy link, and
+    // paste it into that file in quotes, with a comma between links.
+    'manual_posts' => json_decode((string) @file_get_contents(__DIR__ . '/../api/instagram-posts.json'), true) ?: [],
 ];

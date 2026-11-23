@@ -1,6 +1,7 @@
 // ============ Instagram gallery (homepage preview + gallery page) ============
 // Posts come from api/instagram.php (all posts synced from Instagram, or the
-// backup list in instagram/config.php until an access token is added).
+// backup list until an access token is added). Where PHP doesn't run (e.g.
+// GitHub Pages), the backup list api/instagram-posts.json is read directly.
 //
 // Markup: <div id="igGrid" data-ig="preview|full"></div>
 //   preview -> homepage: latest posts only (CSS shows 8 / 6 / 4 by screen size)
@@ -19,8 +20,21 @@
 
   let posts = [];
 
-  fetch("api/instagram.php", { headers: { Accept: "application/json" } })
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  const getJson = url => fetch(url, { headers: { Accept: "application/json" } })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+
+  // Same conversion as manual_payload() in api/instagram.php.
+  const fromBackupList = urls => ({
+    source: "manual",
+    posts: (Array.isArray(urls) ? urls : []).map(u => {
+      const m = /\/(p|reel|tv)\/([A-Za-z0-9_-]+)/.exec(String(u));
+      return m && { id: m[2], type: m[1] === "p" ? "image" : "video",
+                    permalink: `https://www.instagram.com/${m[1]}/${m[2]}/` };
+    }).filter(Boolean),
+  });
+
+  getJson("api/instagram.php")
+    .catch(() => getJson("api/instagram-posts.json").then(fromBackupList))
     .then(data => {
       posts = (data.posts || []).filter(p => p.permalink || p.src);
       if (data.source !== "api") {

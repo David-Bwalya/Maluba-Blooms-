@@ -3,7 +3,8 @@ HOW TO CONNECT INSTAGRAM (one-time setup, about 10 minutes, free)
 
 Once connected, the website shows EVERY post from @maluba_blooms (old and
 new) and picks up new posts by itself within 30 minutes of you posting.
-Until then, the site shows the backup list of posts in config.php.
+Until then, the site shows the backup list of posts in
+api/instagram-posts.json (GitHub Pages always uses that list).
 
 STEP 1 - Make the Instagram account a Professional account
   In the Instagram app: Settings > Account type and tools >
@@ -40,4 +41,6 @@ NOTES
   - The website must be hosted somewhere that runs PHP (most hosting does;
     XAMPP does on this computer).
   - Keep the token private. The instagram/ folder is locked so website
-    visitors can't open it.
+    visitors can't open it (on PHP hosting only, NOT on GitHub Pages).
+  - NEVER commit or push config.php with the token in it: the GitHub
+    repository is public.
