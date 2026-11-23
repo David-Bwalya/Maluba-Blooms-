@@ -17,8 +17,9 @@
   <!-- ============ NAV ============ -->
   <header class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <a href="#products" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
       <nav class="nav__links" id="navLinks">
+        <a href="#products">Products</a>
         <a href="#about">About</a>
         <a href="#services">Services</a>
         <a href="gallery.html">Gallery</a>
@@ -30,6 +31,22 @@
       </button>
     </div>
   </header>
+
+  <!-- ============ PRODUCTS ============ -->
+  <section class="section products" id="products">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow">Price List</p>
+        <h2>Our <em>Products</em></h2>
+        <p class="section__sub">Fresh flowers, boxes and extras. Prices in Kwacha; all pieces can be tailored to your occasion.</p>
+      </div>
+      <!-- Price list is filled in from js/products.js (edit prices there) -->
+      <div class="price-list" id="priceList"></div>
+      <div class="center btn-row">
+        <a href="#contact" class="btn" id="orderWhatsApp">Order on WhatsApp</a>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ MARQUEE ============ -->
   <div class="marquee" aria-hidden="true">
@@ -153,8 +170,8 @@
         <h2>Let’s make something <em>beautiful.</em></h2>
         <p>Tell us about your occasion and we’ll get back to you quickly.</p>
         <ul class="contact__list">
-          <!-- TODO: replace with real details -->
-          <li><span>WhatsApp</span><a href="https://wa.me/260000000000" target="_blank" rel="noopener">+260 000 000 000</a></li>
+          <!-- TODO: replace email and location with real details -->
+          <li><span>WhatsApp</span><a href="https://wa.me/260971234567" target="_blank" rel="noopener">+260 97 1234567</a></li>
           <li><span>Email</span><a href="mailto:hello@malubablooms.com">hello@malubablooms.com</a></li>
           <li><span>Location</span>Your City, Country</li>
         </ul>
@@ -188,7 +205,7 @@
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
     <div class="container footer__inner">
-      <a href="#" class="logo logo--light"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <a href="#products" class="logo logo--light"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
       <nav class="footer__links">
         <a href="#about">About</a>
         <a href="#services">Services</a>
@@ -199,6 +216,7 @@
     </div>
   </footer>
 
+  <script src="js/products.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

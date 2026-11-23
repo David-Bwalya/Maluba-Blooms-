@@ -1,6 +1,6 @@
 // ============ CONFIG ============
-// TODO: put the real WhatsApp number here (country code, no + or spaces)
-const WHATSAPP_NUMBER = "260000000000";
+// WhatsApp number (country code, no + or spaces)
+const WHATSAPP_NUMBER = "260971234567";
 
 // Instagram posts: see instagram/config.php and api/instagram-posts.json (gallery code is in js/gallery.js)
 
@@ -48,6 +48,15 @@ document.getElementById("orderForm")?.addEventListener("submit", (e) => {
     `Details: ${f.get("message") || "-"}`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
 });
+
+// ============ Price list "Order on WhatsApp" button ============
+const orderBtn = document.getElementById("orderWhatsApp");
+if (orderBtn) {
+  const text = "Hello Maluba Blooms! I'd like to place an order from your price list.";
+  orderBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  orderBtn.target = "_blank";
+  orderBtn.rel = "noopener";
+}
 
 // ============ Footer year ============
 const yearEl = document.getElementById("year");
