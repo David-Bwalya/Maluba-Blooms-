@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock — Maluba Blooms Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin">
+
+  <header class="admin-head">
+    <div class="container admin-head__inner">
+      <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <div>
+        <p class="eyebrow">Admin</p>
+        <h1>Stock</h1>
+      </div>
+      <a href="index.html#products" class="btn btn--small btn--outline">View website</a>
+    </div>
+  </header>
+
+  <main class="container admin-main">
+    <p class="admin-status" id="adminStatus" hidden></p>
+
+    <!-- Step 1: connect with a GitHub token -->
+    <section class="admin-panel" id="connectPanel">
+      <h2>Connect</h2>
+      <p>Stock changes are saved to the website’s GitHub repository, so this page needs a GitHub access token. It stays in this browser and is only sent to GitHub.</p>
+      <form class="form form--light" id="connectForm">
+        <label>GitHub access token<input type="password" id="tokenInput" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required></label>
+        <label class="admin-check"><input type="checkbox" id="rememberToken">Remember on this device</label>
+        <button type="submit" class="btn btn--full" id="connectBtn">Connect</button>
+        <button type="button" class="admin-link admin-link--center" id="previewBtn">Just look, without connecting</button>
+      </form>
+      <details class="admin-help">
+        <summary>How to get a token</summary>
+        <ol>
+          <li>On GitHub, open <strong>Settings → Developer settings → Personal access tokens → Fine-grained tokens</strong> and choose <strong>Generate new token</strong>.</li>
+          <li>Repository access: <strong>Only select repositories</strong> → Maluba-Blooms-.</li>
+          <li>Permissions: <strong>Contents → Read and write</strong>. Leave everything else as No access.</li>
+          <li>Generate it, copy it, and paste it above. Treat it like a password.</li>
+        </ol>
+      </details>
+    </section>
+
+    <!-- Step 2: toggle stock -->
+    <section class="admin-panel" id="stockPanel" hidden>
+      <div class="admin-toolbar">
+        <p>Switch a product off and it disappears from the website until you switch it back on.</p>
+        <div class="admin-toolbar__actions">
+          <button type="button" class="admin-link" id="allInStock">Mark everything in stock</button>
+          <button type="button" class="admin-link" id="forgetToken">Forget token</button>
+        </div>
+      </div>
+      <div id="stockList"></div>
+    </section>
+  </main>
+
+  <!-- Sticky save bar -->
+  <div class="admin-bar" id="adminBar">
+    <div class="container admin-bar__inner">
+      <span id="changeCount"></span>
+      <div class="admin-bar__actions">
+        <button type="button" class="admin-link" id="discardBtn" hidden>Discard</button>
+        <button type="button" class="btn" id="saveBtn" disabled>Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/products.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

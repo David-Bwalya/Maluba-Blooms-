@@ -88,14 +88,15 @@
   }
 
   // ---------- Price list rows -> cart ----------
-  document.querySelectorAll(".price-rows .add[data-id]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      add({
-        id: btn.dataset.id, name: btn.dataset.name, price: Number(btn.dataset.price) || 0, label: btn.dataset.label,
-        colours: btn.dataset.colours ? btn.dataset.colours.split("|") : null, chosen: [],
-      });
-      showToast(`Added <strong>${esc(btn.dataset.name)}</strong>. <a href="checkout.html">Go to checkout</a>`);
+  // (delegated: the rows are rendered after the stock list has loaded)
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".price-rows .add[data-id]");
+    if (!btn) return;
+    add({
+      id: btn.dataset.id, name: btn.dataset.name, price: Number(btn.dataset.price) || 0, label: btn.dataset.label,
+      colours: btn.dataset.colours ? btn.dataset.colours.split("|") : null, chosen: [],
     });
+    showToast(`Added <strong>${esc(btn.dataset.name)}</strong>. <a href="checkout.html">Go to checkout</a>`);
   });
 
   // =====================================================================
@@ -203,6 +204,19 @@
   form.querySelectorAll('[name="fulfilment"]').forEach(r => r.addEventListener("change", syncAddress));
   syncAddress();
   renderCart();
+
+  // Drop anything that has gone out of stock since it was added
+  fetch("data/stock.json?t=" + Date.now(), { cache: "no-store" })
+    .then(r => r.ok ? r.json() : {})
+    .then(d => {
+      const out = new Set(Array.isArray(d.outOfStock) ? d.outOfStock : []);
+      const gone = load().filter(i => out.has(i.id));
+      if (!gone.length) return;
+      save(load().filter(i => !out.has(i.id)));
+      renderCart();
+      showToast(`Removed from your cart (currently unavailable): <strong>${esc(gone.map(i => i.name).join(", "))}</strong>.`);
+    })
+    .catch(() => {});
 
   // ---------- Order summary ----------
   function orderDetails() {

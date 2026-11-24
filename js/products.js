@@ -13,6 +13,9 @@
 //  TODO: the current group images are generic stock photos; add a real
 //  photo of each product.
 //
+//  STOCK: products marked out of stock on admin.html are saved to
+//  data/stock.json and hidden from the price list and photo page.
+//
 //  ROSE_COLOURS lists the colours a customer can pick in the cart for any
 //  group marked "colours: ROSE_COLOURS". Add or remove colours as stock
 //  changes.
@@ -187,8 +190,8 @@ const PRODUCTS = [
 //  Rendering (no need to edit).
 //  - <div id="priceList">       homepage: name links to the photo page,
 //                               "+" adds the item to the cart (js/cart.js)
-//  - <div id="productGallery">  product-gallery.html: one card per photo,
-//                               listing the items that use it
+//  - <div id="productGallery">  product-gallery.html: one card per product
+//  Products listed in data/stock.json as out of stock are left out.
 //  A price range (e.g. "K650 – K1,500") can't be charged online, so those
 //  items go into the cart as "quote" items and are confirmed on WhatsApp.
 // ---------------------------------------------------------------------
@@ -208,6 +211,13 @@ const PRODUCTS = [
       colours: g.colours || null, cat: ci, group: gi,
     });
   })));
+  window.MALUBA_ITEMS = items;   // used by admin.html
+
+  // Stock list: ids that are out of stock (saved by admin.html)
+  window.MALUBA_STOCK = fetch("data/stock.json?t=" + Date.now(), { cache: "no-store" })
+    .then(r => r.ok ? r.json() : {})
+    .then(d => new Set(Array.isArray(d.outOfStock) ? d.outOfStock : []))
+    .catch(() => new Set());
 
   // The "+" button; js/cart.js listens for clicks on it
   const addButton = it => `
@@ -216,15 +226,15 @@ const PRODUCTS = [
             aria-label="Add ${esc(it.fullName)} (${esc(it.price)}) to cart">+</button>`;
 
   // ----- Homepage price list -----
-  const list = document.getElementById("priceList");
-  if (list) {
-    list.innerHTML = PRODUCTS.map((cat, ci) => `
-      <section class="price-cat" aria-labelledby="cat-${ci}">
-        <h3 id="cat-${ci}">${esc(cat.title)}</h3>
-        ${cat.groups.map((g, gi) => `
+  function renderList(list, available) {
+    const html = PRODUCTS.map((cat, ci) => {
+      const groups = cat.groups.map((g, gi) => {
+        const rows = available.filter(it => it.cat === ci && it.group === gi);
+        if (!rows.length) return "";
+        return `
           ${g.title ? `<h4>${esc(g.title)}</h4>` : ""}
           <ul class="price-rows">
-            ${items.filter(it => it.cat === ci && it.group === gi).map(it => `
+            ${rows.map(it => `
             <li>
               <a class="row" href="product-gallery.html#${esc(it.id)}" aria-label="${esc(it.fullName)}, ${esc(it.price)}. See photo">
                 <span class="name">${esc(it.name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(it.price)}</span>
@@ -232,20 +242,29 @@ const PRODUCTS = [
               ${addButton(it)}
             </li>`).join("")}
           </ul>
-          ${g.note ? `<p class="price-note">${esc(g.note)}</p>` : ""}`).join("")}
-      </section>`).join("");
+          ${g.note ? `<p class="price-note">${esc(g.note)}</p>` : ""}`;
+      }).join("");
+      if (!groups.trim()) return "";
+      return `
+      <section class="price-cat" aria-labelledby="cat-${ci}">
+        <h3 id="cat-${ci}">${esc(cat.title)}</h3>
+        ${groups}
+      </section>`;
+    }).join("");
+    list.innerHTML = html.trim() || `<p class="price-empty">Our price list is being updated. Please message us on WhatsApp.</p>`;
   }
 
   // ----- Product gallery page: one card per product -----
-  const gallery = document.getElementById("productGallery");
-  if (gallery) {
-    gallery.innerHTML = PRODUCTS.map((cat, ci) => `
+  function renderGallery(gallery, available) {
+    gallery.innerHTML = PRODUCTS.map((cat, ci) => {
+      const rows = available.filter(it => it.cat === ci);
+      if (!rows.length) return "";
+      return `
       <section class="pg-cat" id="pg-cat-${ci}">
         <h2 class="pg-cat__title">${esc(cat.title)}</h2>
         <div class="pg-grid">
-          ${items.filter(it => it.cat === ci).map(it => {
+          ${rows.map(it => {
             const group = cat.groups[it.group];
-            // Prefer the item's own photo; fall back to the group's photo, marked as a sample
             const own = Boolean(it.ownImage);
             const photo = it.ownImage || it.image;
             const sub = group.title || "";
@@ -268,26 +287,37 @@ const PRODUCTS = [
             </article>`;
           }).join("")}
         </div>
-      </section>`).join("");
+      </section>`;
+    }).join("");
 
-    // Arriving from a price-list link (#product-id): show only that product.
-    // With no hash, show the whole gallery.
+    // Opened with #product-id (from the price list): show only that product.
     function focusTarget() {
       const id = decodeURIComponent(location.hash.slice(1));
       const card = id ? document.getElementById(id) : null;
       const single = Boolean(card && card.classList.contains("pg-card"));
+      const gone = Boolean(id && !single && items.some(it => it.id === id));   // out of stock
       gallery.classList.toggle("pg-single", single);
       gallery.querySelectorAll(".pg-cat").forEach(sec => { sec.hidden = single && !sec.contains(card); });
       gallery.querySelectorAll(".pg-card").forEach(c => { c.hidden = single && c !== card; });
       gallery.querySelectorAll(".is-target").forEach(el => el.classList.remove("is-target"));
       document.querySelectorAll("[data-show-all]").forEach(el => { el.hidden = !single; });
+      const notice = document.getElementById("pgUnavailable");
+      if (notice) notice.hidden = !gone;
       if (single) {
         card.classList.add("is-target");
         window.scrollTo({ top: 0 });
       }
     }
     window.addEventListener("hashchange", focusTarget);
-    // Wait a tick so the fixed nav offset and lazy images settle
-    setTimeout(focusTarget, 50);
+    focusTarget();
   }
+
+  const list = document.getElementById("priceList");
+  const gallery = document.getElementById("productGallery");
+  if (!list && !gallery) return;
+  window.MALUBA_STOCK.then(out => {
+    const available = items.filter(it => !out.has(it.id));
+    if (list) renderList(list, available);
+    if (gallery) renderGallery(gallery, available);
+  });
 })();
