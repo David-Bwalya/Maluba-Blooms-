@@ -96,19 +96,37 @@
           <label>Date needed<input type="date" name="date"></label>
           <label>Card message or notes<textarea name="message" rows="3" placeholder="Message for the card, colours, anything we should know…"></textarea></label>
 
-          <fieldset class="form__choices" id="payOptions" hidden>
-            <legend>Pay with</legend>
-            <label><input type="radio" name="method" value="airtel" checked>Airtel Money</label>
-            <label><input type="radio" name="method" value="card">Card</label>
+          <fieldset class="form__choices form__choices--3" id="payOptions">
+            <legend>How would you like to order?</legend>
+            <label><input type="radio" name="method" value="momo" checked>Mobile Money <small>Airtel Money · MTN MoMo</small></label>
+            <label><input type="radio" name="method" value="card">Bank Card <small>Visa · Mastercard</small></label>
+            <label><input type="radio" name="method" value="whatsapp">WhatsApp <small>Pay later</small></label>
           </fieldset>
-          <p class="form__note form__note--left" id="payUnavailable" hidden></p>
+          <p class="form__note form__note--left" id="quoteNote" hidden>Your cart has an item that needs a quote, so this order can only be sent on WhatsApp. We’ll confirm the price and payment there.</p>
+          <label id="momoField">Mobile Money number<input type="tel" name="momo" inputmode="tel" placeholder="097 1234567" autocomplete="tel"></label>
+          <p class="form__note form__note--left" id="testNote" hidden><strong>Test mode.</strong> Online payment isn’t switched on yet, so the next steps are a preview and no money is taken. Choose WhatsApp to place a real order today.</p>
 
           <button type="submit" class="btn btn--full btn--desktop" id="submitBtn">Pay</button>
-          <p class="form__note">Payments are processed securely by Flutterwave. We never see your card or Airtel Money PIN.</p>
+          <p class="form__note">Online payments are processed securely by our payment partner. We never see your card details or Mobile Money PIN.</p>
         </form>
       </div>
     </div>
   </section>
+
+  <!-- Payment steps (Mobile Money / Bank Card) -->
+  <div class="paysheet" id="paySheet" hidden role="dialog" aria-modal="true" aria-labelledby="psTitle">
+    <div class="paysheet__box">
+      <p class="eyebrow" id="psEyebrow"></p>
+      <h2 id="psTitle"></h2>
+      <p class="paysheet__text" id="psText"></p>
+      <div class="paysheet__spinner" id="psSpinner" hidden aria-label="Please wait"></div>
+      <p class="paysheet__test" id="psTest" hidden>Test mode · no money is taken</p>
+      <div class="paysheet__actions">
+        <button type="button" class="btn btn--full" id="psAction"></button>
+        <button type="button" class="paysheet__cancel" id="psCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Phone: sticky total + button -->
   <div class="checkout-bar">

@@ -615,6 +615,45 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 .form__choices input { width: 1.1rem; height: 1.1rem; margin: 0; padding: 0; accent-color: var(--black); }
 .form__choices label:has(input:checked) { border-color: var(--black); background: var(--grey-100); }
 
+.form__choices label small { display: block; width: 100%; margin-top: .15rem; font-size: .72rem; color: var(--grey-500); }
+.form__choices--3 label { flex-basis: 150px; flex-wrap: wrap; align-content: center; }
+.form__choices--3 label small { margin-left: 1.8rem; }
+.form__choices label.is-disabled { opacity: .45; cursor: not-allowed; }
+
+/* Payment steps: full-screen sheet */
+.paysheet {
+  position: fixed; inset: 0; z-index: 300;
+  display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(10,10,10,.6); padding: 0;
+}
+.paysheet__box {
+  width: 100%; max-width: 520px; background: var(--white); color: var(--ink);
+  padding: 2rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom));
+  text-align: center;
+}
+.paysheet__box h2 { font-size: 2rem; margin-bottom: .8rem; }
+.paysheet__text { color: var(--grey-700); margin-bottom: 1.4rem; }
+.paysheet__spinner {
+  width: 2.6rem; height: 2.6rem; margin: 0 auto 1.4rem;
+  border: 2px solid var(--grey-300); border-top-color: var(--black); border-radius: 50%;
+  animation: spin .9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.paysheet__test {
+  display: inline-block; margin-bottom: 1.2rem; padding: .35rem .7rem;
+  background: var(--grey-100); color: var(--grey-700);
+  font-size: .68rem; letter-spacing: .15em; text-transform: uppercase;
+}
+.paysheet__actions { display: flex; flex-direction: column; gap: .8rem; align-items: center; }
+.paysheet__cancel {
+  background: none; border: 0; cursor: pointer; color: var(--grey-500);
+  font: inherit; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; text-decoration: underline;
+}
+@media (min-width: 601px) {
+  .paysheet { align-items: center; padding: 1.5rem; }
+  .paysheet__box { padding: 2.5rem 2.5rem 2rem; }
+}
+
 /* Phone: sticky total + pay button at the bottom */
 .checkout-bar { display: none; }
 
