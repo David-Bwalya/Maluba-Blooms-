@@ -518,7 +518,12 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 .pg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start; }
 .pg-card { border: 1px solid var(--grey-300); scroll-margin-top: 7rem; transition: box-shadow .3s; }
 .pg-card.is-target { box-shadow: 0 0 0 2px var(--black); }
-.pg-card__img { aspect-ratio: 4 / 5; overflow: hidden; background: var(--grey-100); }
+.pg-card__img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--grey-100); }
+.pg-card__tag {
+  position: absolute; left: .6rem; bottom: .6rem;
+  padding: .3rem .55rem; background: rgba(255,255,255,.9); color: var(--grey-700);
+  font-size: .62rem; letter-spacing: .15em; text-transform: uppercase;
+}
 .pg-card__img--none { display: flex; align-items: center; justify-content: center; color: var(--grey-500); font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; }
 .pg-card__body { padding: 1.2rem 1.2rem 1.3rem; }
 .pg-card__body h3 { font-size: 1.5rem; margin-bottom: .1rem; }
@@ -526,9 +531,16 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 .pg-card .price-rows { margin-top: .5rem; }
 .pg-card .price-rows li { font-size: .95rem; }
 .pg-card .price-rows .row { padding: .45rem 0; }
-.pg-card .price-rows li.is-target .name, .pg-card .price-rows li.is-target .price { color: var(--black); font-weight: 500; }
-.pg-card .price-rows li.is-target .name { text-decoration: underline; text-underline-offset: 3px; }
+.pg-card .price-rows .name { color: var(--black); font-weight: 500; font-variant-numeric: tabular-nums; }
 .pg-card .price-note { margin-top: .6rem; }
+
+/* Single product view (opened from the price list): one large card, centred */
+.pg-single .pg-cat__title { text-align: center; border-bottom: 0; margin-bottom: 1rem; }
+.pg-single .pg-grid { grid-template-columns: minmax(0, 560px); justify-content: center; }
+.pg-single .pg-card.is-target { box-shadow: none; }
+.pg-single .pg-card__body { padding: 1.5rem; }
+.pg-single .pg-card__body h3 { font-size: 2rem; }
+.pg-single .price-rows li { font-size: 1.15rem; }
 
 /* "Added to cart" message */
 .toast {

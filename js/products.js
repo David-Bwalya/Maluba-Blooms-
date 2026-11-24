@@ -4,13 +4,14 @@
 //  Prices are written exactly as they should appear: "K1,400" for one
 //  price, "K650 – K1,500" for a range.
 //
-//  PHOTOS: each group can have an "image" that is used for all of its
-//  items, and any single item can have its own photo as a third value:
+//  PHOTOS: every product has its own card on product-gallery.html. Give a
+//  product its photo as a third value (a file in images/products/ or a
+//  full https:// link):
 //      ["40 stems", "K750", "images/products/roses-40.jpg"],
-//  Items that share a photo are shown together on product-gallery.html;
-//  give an item its own photo and it gets its own card automatically.
-//  The current photos are generic stock images (TODO: replace with real
-//  Maluba Blooms photos). Items with no photo show "Photo coming soon".
+//  Until a product has its own photo, the card shows the group's "image"
+//  labelled "Sample photo", or "Photo coming soon" if there is none.
+//  TODO: the current group images are generic stock photos; add a real
+//  photo of each product.
 //
 //  ROSE_COLOURS lists the colours a customer can pick in the cart for any
 //  group marked "colours: ROSE_COLOURS". Add or remove colours as stock
@@ -202,7 +203,8 @@ const PRODUCTS = [
     const fullName = `${cat.title}${g.title ? " · " + g.title : ""} – ${name}`;
     items.push({
       id: slug(fullName), name, fullName, price, value: priceValue(price),
-      image: image || g.image || cat.image || "",
+      ownImage: image || "",                       // this product's own photo
+      image: image || g.image || cat.image || "",  // photo to show (own, else the group's)
       colours: g.colours || null, cat: ci, group: gi,
     });
   })));
@@ -234,59 +236,55 @@ const PRODUCTS = [
       </section>`).join("");
   }
 
-  // ----- Product gallery page -----
+  // ----- Product gallery page: one card per product -----
   const gallery = document.getElementById("productGallery");
   if (gallery) {
-    gallery.innerHTML = PRODUCTS.map((cat, ci) => {
-      // Within a category, items sharing a photo (or having none) share a card
-      const cards = [];
-      items.filter(it => it.cat === ci).forEach(it => {
-        const key = it.image || `none-${it.group}`;
-        let card = cards.find(c => c.key === key);
-        if (!card) cards.push(card = { key, image: it.image, items: [], group: cat.groups[it.group] });
-        card.items.push(it);
-      });
-      return `
+    gallery.innerHTML = PRODUCTS.map((cat, ci) => `
       <section class="pg-cat" id="pg-cat-${ci}">
         <h2 class="pg-cat__title">${esc(cat.title)}</h2>
         <div class="pg-grid">
-          ${cards.map(card => {
-            const title = card.items.length === 1 ? card.items[0].name : (card.group.title || cat.title);
-            const ids = card.items.map(it => it.id);
+          ${items.filter(it => it.cat === ci).map(it => {
+            const group = cat.groups[it.group];
+            // Prefer the item's own photo; fall back to the group's photo, marked as a sample
+            const own = Boolean(it.ownImage);
+            const photo = it.ownImage || it.image;
+            const sub = group.title || "";
             return `
-            <article class="pg-card" id="${esc(ids[0])}" data-ids="${esc(ids.join(" "))}">
-              ${card.image
-                ? `<div class="pg-card__img"><img src="${esc(card.image)}" alt="${esc(title)}" loading="lazy" decoding="async"></div>`
+            <article class="pg-card" id="${esc(it.id)}">
+              ${photo
+                ? `<div class="pg-card__img"><img src="${esc(photo)}" alt="${esc(it.fullName)}" loading="lazy" decoding="async">${own ? "" : `<span class="pg-card__tag">Sample photo</span>`}</div>`
                 : `<div class="pg-card__img pg-card__img--none"><span>Photo coming soon</span></div>`}
               <div class="pg-card__body">
-                <h3>${esc(title)}</h3>
-                ${card.items.length > 1 && card.group.title && card.group.title !== title ? `<p class="pg-card__sub">${esc(card.group.title)}</p>` : ""}
+                ${sub ? `<p class="pg-card__sub">${esc(sub)}</p>` : ""}
+                <h3>${esc(it.name)}</h3>
                 <ul class="price-rows">
-                  ${card.items.map(it => `
-                  <li id="${card.items.length > 1 ? esc(it.id) : ""}">
-                    <span class="row"><span class="name">${esc(it.name)}</span><span class="lead" aria-hidden="true"></span><span class="price">${esc(it.price)}</span></span>
+                  <li>
+                    <span class="row"><span class="name">${esc(it.price)}</span><span class="lead" aria-hidden="true"></span></span>
                     ${addButton(it)}
-                  </li>`).join("")}
+                  </li>
                 </ul>
-                ${card.group.note ? `<p class="price-note">${esc(card.group.note)}</p>` : ""}
+                ${group.note ? `<p class="price-note">${esc(group.note)}</p>` : ""}
               </div>
             </article>`;
           }).join("")}
         </div>
-      </section>`;
-    }).join("");
+      </section>`).join("");
 
-    // Arriving from a price-list link: highlight that item's card and row
+    // Arriving from a price-list link (#product-id): show only that product.
+    // With no hash, show the whole gallery.
     function focusTarget() {
       const id = decodeURIComponent(location.hash.slice(1));
+      const card = id ? document.getElementById(id) : null;
+      const single = Boolean(card && card.classList.contains("pg-card"));
+      gallery.classList.toggle("pg-single", single);
+      gallery.querySelectorAll(".pg-cat").forEach(sec => { sec.hidden = single && !sec.contains(card); });
+      gallery.querySelectorAll(".pg-card").forEach(c => { c.hidden = single && c !== card; });
       gallery.querySelectorAll(".is-target").forEach(el => el.classList.remove("is-target"));
-      if (!id) return;
-      const card = gallery.querySelector(`.pg-card[data-ids~="${CSS.escape(id)}"]`);
-      if (!card) return;
-      card.classList.add("is-target");
-      const row = card.querySelector(`#${CSS.escape(id)}`);
-      if (row) row.classList.add("is-target");
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      document.querySelectorAll("[data-show-all]").forEach(el => { el.hidden = !single; });
+      if (single) {
+        card.classList.add("is-target");
+        window.scrollTo({ top: 0 });
+      }
     }
     window.addEventListener("hashchange", focusTarget);
     // Wait a tick so the fixed nav offset and lazy images settle
