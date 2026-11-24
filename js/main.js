@@ -1,6 +1,6 @@
 // ============ CONFIG ============
 // WhatsApp number (country code, no + or spaces)
-const WHATSAPP_NUMBER = "260971234567";
+const WHATSAPP_NUMBER = "260775449155";
 
 // Online payments (Airtel Money + card) at checkout.html run through
 // Flutterwave. Paste the PUBLIC key from the Flutterwave dashboard
