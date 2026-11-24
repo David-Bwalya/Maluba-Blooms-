@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Photos — Maluba Blooms</title>
+  <meta name="description" content="See what each Maluba Blooms product looks like, with prices, and add it to your cart.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+  <link rel="apple-touch-icon" href="images/logo.jpg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <div class="nav__right">
+        <nav class="nav__links" id="navLinks">
+          <a href="index.html#products">Products</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#services">Services</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="index.html#order">How to Order</a>
+          <a href="index.html#contact" class="btn btn--small">Contact</a>
+        </nav>
+        <a href="checkout.html" class="nav__cart" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="nav__cart-count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PAGE HEADER ============ -->
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Our Products</p>
+      <h1>Product <em>Photos</em></h1>
+      <p class="page-head__sub">What each piece looks like, with its price. Tap + to add it to your cart.</p>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCT GALLERY ============ -->
+  <section class="section product-gallery">
+    <div class="container">
+      <!-- Cards are filled in from js/products.js (edit photos and prices there).
+           Opened with #product-id (from the price list) it shows that product only. -->
+      <div id="productGallery"></div>
+      <div class="center btn-row">
+        <a href="checkout.html" class="btn">Go to checkout <span data-cart-count-inline></span></a>
+        <a href="product-gallery.html" class="btn btn--outline" data-show-all hidden>See all product photos</a>
+        <a href="index.html#products" class="btn btn--outline">Back to the price list</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="index.html" class="logo logo--light"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <nav class="footer__links">
+        <a href="index.html#about">About</a>
+        <a href="index.html#services">Services</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <p class="footer__copy">© <span id="year"></span> Maluba Blooms. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>

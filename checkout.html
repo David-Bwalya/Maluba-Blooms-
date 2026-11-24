@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout — Maluba Blooms</title>
+  <meta name="description" content="Review your Maluba Blooms order and pay with Airtel Money or card.">
   <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,208 +12,126 @@
   <link rel="icon" type="image/jpeg" href="images/logo.jpg">
   <link rel="apple-touch-icon" href="images/logo.jpg">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Flutterwave hosted checkout (Airtel Money + card). Used only when a public key is set in js/main.js -->
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
 </head>
-<body class="checkout-body">
+<body>
 
   <!-- ============ NAV ============ -->
   <header class="nav" id="nav">
     <div class="container nav__inner">
       <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
-      <nav class="nav__links" id="navLinks">
-        <a href="index.html#about">About</a>
-        <a href="index.html#services">Services</a>
-        <a href="shop.html">Shop</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="index.html#order">How to Order</a>
-        <a href="index.html#contact" class="btn btn--small">Order Now</a>
-      </nav>
-      <button type="button" class="nav__cart" data-cart-open aria-label="Open cart">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8h13l-1.2 12H6.7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
-        <span class="nav__cart-count" data-cart-count hidden>0</span>
-      </button>
-      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
-        <span></span><span></span>
-      </button>
+      <div class="nav__right">
+        <nav class="nav__links" id="navLinks">
+          <a href="index.html#products">Products</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#services">Services</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="index.html#order">How to Order</a>
+          <a href="index.html#contact" class="btn btn--small">Contact</a>
+        </nav>
+        <a href="checkout.html" class="nav__cart" aria-label="Cart" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="nav__cart-count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <section class="page-head page-head--slim">
+  <!-- ============ PAGE HEADER ============ -->
+  <section class="page-head">
     <div class="container">
-      <h1 id="checkoutTitle">Checkout</h1>
+      <p class="eyebrow">Your Order</p>
+      <h1>Check<em>out</em></h1>
+      <p class="page-head__sub">Review your items, add your details and pay with Airtel Money or card.</p>
     </div>
   </section>
 
+  <!-- ============ CHECKOUT ============ -->
   <section class="section checkout">
     <div class="container">
 
-      <!-- Empty cart -->
-      <div class="checkout-empty" id="checkoutEmpty" hidden>
-        <p>Your cart is empty.</p>
-        <a href="shop.html" class="btn">Go to the shop</a>
-      </div>
-
-      <!-- Checkout steps + summary -->
-      <div class="checkout__grid" id="checkoutMain" hidden>
-        <form class="co-form" id="checkoutForm" novalidate>
-          <ol class="co-progress" aria-label="Checkout steps">
-            <li data-step="1">Details</li>
-            <li data-step="2">Delivery</li>
-            <li data-step="3">Payment</li>
-            <li data-step="4">Review &amp; pay</li>
-          </ol>
-
-          <!-- Step 1 -->
-          <fieldset class="co-step" data-step="1">
-            <legend><span>1</span> Your details</legend>
-            <label class="field">Full name
-              <input type="text" name="name" autocomplete="name" required>
-            </label>
-            <div class="field-row">
-              <label class="field">Phone number
-                <input type="tel" name="phone" autocomplete="tel" placeholder="097 123 4567" required data-zm-phone>
-              </label>
-              <label class="field">Email <small>(optional, for your receipt)</small>
-                <input type="email" name="email" autocomplete="email">
-              </label>
-            </div>
-          </fieldset>
-
-          <!-- Step 2 -->
-          <fieldset class="co-step" data-step="2" hidden>
-            <legend><span>2</span> Delivery</legend>
-            <div class="choice-list" id="deliveryOptions" role="radiogroup" aria-label="Delivery method"></div>
-
-            <div class="co-address" id="addressFields">
-              <div class="field-row">
-                <label class="field">Recipient's name
-                  <input type="text" name="recipient" autocomplete="off" required>
-                </label>
-                <label class="field">Recipient's phone
-                  <input type="tel" name="recipientPhone" placeholder="097 123 4567" required data-zm-phone>
-                </label>
-              </div>
-              <label class="field">Delivery address
-                <textarea name="address" rows="2" placeholder="House number, street, area, landmark" required></textarea>
-              </label>
-            </div>
-
-            <div class="field-row">
-              <label class="field">Date needed
-                <input type="date" name="date" required>
-              </label>
-              <label class="field">Time
-                <select name="slot" id="slotSelect" required></select>
-              </label>
-            </div>
-            <label class="field">Card message <small>(optional)</small>
-              <textarea name="note" rows="2" maxlength="200" placeholder="Happy birthday! Love, …"></textarea>
-            </label>
-          </fieldset>
-
-          <!-- Step 3 -->
-          <fieldset class="co-step" data-step="3" hidden>
-            <legend><span>3</span> Payment method</legend>
-            <p class="test-banner" id="testBanner" hidden>
-              <strong>Test mode:</strong> no real money is taken.
-              Any valid number works. To see a failed payment, use card
-              <code>4000 0000 0000 0002</code> or a mobile number ending in <code>0000</code>.
-            </p>
-            <div class="choice-list choice-list--pay" role="radiogroup" aria-label="Payment method">
-              <label class="choice"><input type="radio" name="payMethod" value="airtel" checked>
-                <span class="choice__main"><strong>Airtel Money</strong><small>097 / 077 numbers</small></span></label>
-              <label class="choice"><input type="radio" name="payMethod" value="mtn">
-                <span class="choice__main"><strong>MTN MoMo</strong><small>096 / 076 numbers</small></span></label>
-              <label class="choice"><input type="radio" name="payMethod" value="zamtel">
-                <span class="choice__main"><strong>Zamtel Kwacha</strong><small>095 / 075 numbers</small></span></label>
-              <label class="choice"><input type="radio" name="payMethod" value="card">
-                <span class="choice__main"><strong>Visa / Mastercard</strong><small>Debit or credit card</small></span></label>
-            </div>
-
-            <div id="momoFields">
-              <label class="field">Mobile money number
-                <input type="tel" name="momoNumber" placeholder="097 123 4567" required data-zm-phone>
-              </label>
-              <p class="field-help">You'll get a prompt on this phone to approve the payment with your PIN.</p>
-            </div>
-
-            <div id="cardFields" hidden>
-              <label class="field">Name on card
-                <input type="text" name="cardName" autocomplete="cc-name" required>
-              </label>
-              <label class="field">Card number
-                <input type="text" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="23" required>
-              </label>
-              <div class="field-row field-row--tight">
-                <label class="field">Expiry
-                  <input type="text" name="cardExpiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" maxlength="7" required>
-                </label>
-                <label class="field">CVC
-                  <input type="text" name="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required>
-                </label>
-              </div>
-              <p class="field-help">Card details are only used for this payment and are never stored.</p>
-            </div>
-          </fieldset>
-
-          <!-- Step 4 -->
-          <fieldset class="co-step" data-step="4" hidden>
-            <legend><span>4</span> Review &amp; pay</legend>
-            <dl class="review" id="reviewBox"></dl>
-            <label class="check">
-              <input type="checkbox" name="terms" required>
-              <span>I confirm my order details are correct. Fresh flowers may vary slightly from photos depending on the season.</span>
-            </label>
-          </fieldset>
-
-          <p class="co-error" id="stepError" role="alert" hidden></p>
-
-          <div class="co-nav">
-            <button type="button" class="btn btn--outline" id="backBtn" hidden>Back</button>
-            <button type="submit" class="btn" id="nextBtn">Continue</button>
-          </div>
-        </form>
-
-        <aside class="co-summary" aria-labelledby="summaryTitle">
-          <div class="co-summary__head">
-            <h2 id="summaryTitle">Order <em>summary</em></h2>
-            <button type="button" class="co-summary__edit" data-cart-open>Edit cart</button>
-          </div>
-          <ul class="co-summary__lines" id="summaryLines"></ul>
-          <dl class="co-totals">
-            <div><dt>Subtotal</dt><dd id="sumSubtotal"></dd></div>
-            <div><dt>Delivery</dt><dd id="sumDelivery"></dd></div>
-            <div class="co-totals__grand"><dt>Total</dt><dd id="sumTotal"></dd></div>
-          </dl>
-          <p class="co-secure">Secure checkout · Mobile money &amp; cards accepted</p>
-        </aside>
-      </div>
-
-      <!-- Confirmation -->
-      <div class="confirmation" id="confirmation" hidden tabindex="-1">
-        <div class="confirmation__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
-        </div>
-        <p class="eyebrow">Payment successful</p>
-        <h2>Thank you, <em id="confName"></em></h2>
-        <p class="confirmation__lead" id="confLead"></p>
-        <div class="receipt" id="receipt"></div>
+      <div class="checkout-msg" id="checkoutDone" hidden>
+        <p class="eyebrow">Thank you</p>
+        <h2 id="doneTitle"></h2>
+        <p id="doneText"></p>
         <div class="btn-row">
-          <a href="#" class="btn" id="confWhatsApp" target="_blank" rel="noopener">Send order on WhatsApp</a>
-          <a href="shop.html" class="btn btn--outline">Continue shopping</a>
+          <a id="doneWhatsApp" class="btn" href="#" target="_blank" rel="noopener">Open WhatsApp</a>
+          <a href="index.html#products" class="btn btn--outline">Back to products</a>
         </div>
+      </div>
+
+      <div class="checkout-msg" id="cartEmpty" hidden>
+        <h2>Your cart is <em>empty.</em></h2>
+        <p>Tap any item in the price list to add it.</p>
+        <div class="btn-row"><a href="index.html#products" class="btn">See the price list</a></div>
+      </div>
+
+      <div class="checkout__grid" id="checkoutGrid" hidden>
+        <div class="checkout__cart">
+          <h2 class="checkout__title">Your <em>cart</em></h2>
+          <ul class="cart-list" id="cartList"></ul>
+          <div class="cart-total">
+            <span>Total</span>
+            <strong id="cartTotal"></strong>
+          </div>
+        </div>
+
+        <form class="form form--light" id="checkoutForm">
+          <h2 class="checkout__title">Your <em>details</em></h2>
+          <div class="form__row">
+            <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+            <label>Phone<input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="097 1234567" required></label>
+          </div>
+          <label>Email<input type="email" name="email" autocomplete="email" inputmode="email" placeholder="For your payment receipt" required></label>
+          <fieldset class="form__choices">
+            <legend>Delivery or pickup</legend>
+            <label><input type="radio" name="fulfilment" value="Delivery" checked>Delivery</label>
+            <label><input type="radio" name="fulfilment" value="Pickup">Pickup</label>
+          </fieldset>
+          <label id="addressField">Delivery address<input type="text" name="address" autocomplete="street-address" placeholder="Area, street, landmark"></label>
+          <label>Date needed<input type="date" name="date"></label>
+          <label>Card message or notes<textarea name="message" rows="3" placeholder="Message for the card, colours, anything we should know…"></textarea></label>
+
+          <fieldset class="form__choices form__choices--3" id="payOptions">
+            <legend>How would you like to order?</legend>
+            <label><input type="radio" name="method" value="momo" checked>Mobile Money <small>Airtel Money · MTN MoMo</small></label>
+            <label><input type="radio" name="method" value="card">Bank Card <small>Visa · Mastercard</small></label>
+            <label><input type="radio" name="method" value="whatsapp">WhatsApp <small>Pay later</small></label>
+          </fieldset>
+          <p class="form__note form__note--left" id="quoteNote" hidden>Your cart has an item that needs a quote, so this order can only be sent on WhatsApp. We’ll confirm the price and payment there.</p>
+          <label id="momoField">Mobile Money number<input type="tel" name="momo" inputmode="tel" placeholder="097 1234567" autocomplete="tel"></label>
+          <p class="form__note form__note--left" id="testNote" hidden><strong>Test mode.</strong> Online payment isn’t switched on yet, so the next steps are a preview and no money is taken. Choose WhatsApp to place a real order today.</p>
+
+          <button type="submit" class="btn btn--full btn--desktop" id="submitBtn">Pay</button>
+          <p class="form__note">Online payments are processed securely by our payment partner. We never see your card details or Mobile Money PIN.</p>
+        </form>
       </div>
     </div>
   </section>
 
-  <!-- Payment in progress -->
-  <div class="pay-overlay" id="payOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="payTitle">
-    <div class="pay-box">
-      <div class="spinner" aria-hidden="true"></div>
-      <h2 id="payTitle"></h2>
-      <p id="payText"></p>
-      <p class="pay-box__timer" id="payTimer"></p>
-      <button type="button" class="pay-box__cancel" id="payCancel">Cancel payment</button>
+  <!-- Payment steps (Mobile Money / Bank Card) -->
+  <div class="paysheet" id="paySheet" hidden role="dialog" aria-modal="true" aria-labelledby="psTitle">
+    <div class="paysheet__box">
+      <p class="eyebrow" id="psEyebrow"></p>
+      <h2 id="psTitle"></h2>
+      <p class="paysheet__text" id="psText"></p>
+      <div class="paysheet__spinner" id="psSpinner" hidden aria-label="Please wait"></div>
+      <p class="paysheet__test" id="psTest" hidden>Test mode · no money is taken</p>
+      <div class="paysheet__actions">
+        <button type="button" class="btn btn--full" id="psAction"></button>
+        <button type="button" class="paysheet__cancel" id="psCancel">Cancel</button>
+      </div>
     </div>
+  </div>
+
+  <!-- Phone: sticky total + button -->
+  <div class="checkout-bar">
+    <div><span class="checkout-bar__label">Total</span><strong id="barTotal"></strong></div>
+    <button type="submit" form="checkoutForm" class="btn" id="barBtn">Pay</button>
   </div>
 
   <!-- ============ FOOTER ============ -->
@@ -222,7 +141,6 @@
       <nav class="footer__links">
         <a href="index.html#about">About</a>
         <a href="index.html#services">Services</a>
-        <a href="shop.html">Shop</a>
         <a href="gallery.html">Gallery</a>
         <a href="index.html#contact">Contact</a>
       </nav>
@@ -231,9 +149,6 @@
   </footer>
 
   <script src="js/main.js"></script>
-  <script src="js/shop-data.js"></script>
   <script src="js/cart.js"></script>
-  <script src="js/payment.js"></script>
-  <script src="js/checkout.js"></script>
 </body>
 </html>

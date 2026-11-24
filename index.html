@@ -17,43 +17,43 @@
   <!-- ============ NAV ============ -->
   <header class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#home" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
-      <nav class="nav__links" id="navLinks">
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="shop.html">Shop</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#order">How to Order</a>
-        <a href="#contact" class="btn btn--small">Order Now</a>
-      </nav>
-      <button type="button" class="nav__cart" data-cart-open aria-label="Open cart">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8h13l-1.2 12H6.7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
-        <span class="nav__cart-count" data-cart-count hidden>0</span>
-      </button>
-      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
-        <span></span><span></span>
-      </button>
+      <a href="#products" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <div class="nav__right">
+        <nav class="nav__links" id="navLinks">
+          <a href="#products">Products</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="#order">How to Order</a>
+          <a href="#contact" class="btn btn--small">Contact</a>
+        </nav>
+        <a href="checkout.html" class="nav__cart" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="nav__cart-count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- ============ HERO ============ -->
-  <section class="hero" id="home">
-    <div class="hero__bg"></div>
-    <!-- Plays images/hero.mp4 if it exists; removed automatically if not -->
-    <video class="hero__video" autoplay muted loop playsinline preload="auto">
-      <source src="images/hero.mp4" type="video/mp4" onerror="this.parentElement.remove()">
-    </video>
-    <div class="hero__overlay"></div>
-    <div class="container hero__content">
-      <p class="eyebrow">Delivering emotions through flowers</p>
-      <h1>Flowers that<br><em>say it for you.</em></h1>
-      <p class="hero__text">Handcrafted bouquets, event florals and thoughtful gifts, made with care for every occasion.</p>
-      <div class="hero__actions">
-        <a href="shop.html" class="btn btn--light">Shop Now</a>
-        <a href="#gallery" class="btn btn--outline-light">View Our Work</a>
+  <!-- ============ PRODUCTS ============ -->
+  <section class="section products" id="products">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow">Price List</p>
+        <h2>Our <em>Products</em></h2>
+        <p class="section__sub">Fresh flowers, boxes and extras, priced in Kwacha. Tap a name to see a photo, or + to add it to your cart, then pay with Airtel Money or card at checkout.</p>
+      </div>
+      <!-- Price list is filled in from js/products.js (edit prices there) -->
+      <div class="price-list" id="priceList"></div>
+      <div class="center btn-row">
+        <a href="checkout.html" class="btn">Go to checkout <span data-cart-count-inline></span></a>
+        <a href="product-gallery.html" class="btn btn--outline">See product photos</a>
+        <a href="#contact" class="btn btn--outline" id="orderWhatsApp">Order on WhatsApp</a>
       </div>
     </div>
-    <a href="#about" class="hero__scroll" aria-label="Scroll down">Scroll</a>
   </section>
 
   <!-- ============ MARQUEE ============ -->
@@ -130,56 +130,11 @@
     </div>
   </section>
 
-  <!-- ============ SHOP NOW ============ -->
-  <section class="section shop-preview" id="shop">
-    <div class="container">
-      <div class="section__head reveal">
-        <p class="eyebrow">Shop Now</p>
-        <h2>Ready-to-order <em>Packages</em></h2>
-        <p class="section__sub">Choose a package, add it to your cart and pay with mobile money or card.</p>
-      </div>
-      <!-- Featured products from js/shop-data.js (featured: true) -->
-      <div class="products products--featured" id="shopGrid" data-shop="featured"></div>
-      <div class="center btn-row">
-        <a href="shop.html" class="btn">View all packages</a>
-      </div>
-    </div>
-  </section>
-
   <!-- ============ QUOTE BAND ============ -->
   <section class="quote">
     <div class="container reveal">
       <p class="quote__text">“Where flowers bloom,<br>so does <em>hope.</em>”</p>
       <span class="quote__author">— Lady Bird Johnson</span>
-    </div>
-  </section>
-
-  <!-- ============ GALLERY ============ -->
-  <section class="section gallery" id="gallery">
-    <div class="container">
-      <div class="section__head reveal">
-        <p class="eyebrow">Our Work</p>
-        <h2>The <em>Gallery</em></h2>
-        <p class="section__sub">A look at some of our latest pieces.</p>
-      </div>
-      <!-- Latest Instagram posts, inserted by js/gallery.js (8 desktop / 6 tablet / 4 phone) -->
-      <div class="ig-grid" id="igGrid" data-ig="preview" hidden></div>
-      <p class="ig-status" id="igSyncNotice" hidden>
-        <span id="igSyncNoticeMessage"></span>
-      </p>
-
-      <!-- Fallback stock gallery: shown only if Instagram posts can't be loaded -->
-      <div class="gallery__grid" id="stockGallery">
-        <figure class="g-item g-item--tall reveal"><img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=800&q=80" alt="Floral arrangement"></figure>
-        <figure class="g-item reveal"><img src="https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?w=800&q=80" alt="Flowers"></figure>
-        <figure class="g-item reveal"><img src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=800&q=80" alt="Bouquet"></figure>
-        <figure class="g-item g-item--wide reveal"><img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=1200&q=80" alt="Roses"></figure>
-        <figure class="g-item reveal"><img src="https://images.unsplash.com/photo-1494972308805-463bc619d34e?w=800&q=80" alt="Flowers"></figure>
-        <figure class="g-item reveal"><img src="https://images.unsplash.com/photo-1468327768560-75b778cbb551?w=800&q=80" alt="Blooms"></figure>
-      </div>
-      <div class="center btn-row reveal">
-        <a href="gallery.html" class="btn">View full gallery</a>
-      </div>
     </div>
   </section>
 
@@ -223,8 +178,8 @@
         <h2>Let’s make something <em>beautiful.</em></h2>
         <p>Tell us about your occasion and we’ll get back to you quickly.</p>
         <ul class="contact__list">
-          <!-- TODO: replace with real details -->
-          <li><span>WhatsApp</span><a href="https://wa.me/260000000000" target="_blank" rel="noopener">+260 000 000 000</a></li>
+          <!-- TODO: replace email and location with real details -->
+          <li><span>WhatsApp</span><a href="https://wa.me/260971234567" target="_blank" rel="noopener">+260 97 1234567</a></li>
           <li><span>Email</span><a href="mailto:hello@malubablooms.com">hello@malubablooms.com</a></li>
           <li><span>Location</span>Your City, Country</li>
         </ul>
@@ -258,22 +213,19 @@
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
     <div class="container footer__inner">
-      <a href="#home" class="logo logo--light"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
+      <a href="#products" class="logo logo--light"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
       <nav class="footer__links">
         <a href="#about">About</a>
         <a href="#services">Services</a>
-        <a href="shop.html">Shop</a>
-        <a href="#gallery">Gallery</a>
+        <a href="gallery.html">Gallery</a>
         <a href="#contact">Contact</a>
       </nav>
       <p class="footer__copy">© <span id="year"></span> Maluba Blooms. All rights reserved.</p>
     </div>
   </footer>
 
+  <script src="js/products.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/gallery.js"></script>
-  <script src="js/shop-data.js"></script>
   <script src="js/cart.js"></script>
-  <script src="js/shop.js"></script>
 </body>
 </html>

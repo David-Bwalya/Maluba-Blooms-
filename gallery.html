@@ -18,21 +18,23 @@
   <header class="nav" id="nav">
     <div class="container nav__inner">
       <a href="index.html" class="logo"><img src="images/logo.jpg" alt="Maluba Blooms" class="logo__img"></a>
-      <nav class="nav__links" id="navLinks">
-        <a href="index.html#about">About</a>
-        <a href="index.html#services">Services</a>
-        <a href="shop.html">Shop</a>
-        <a href="gallery.html" aria-current="page">Gallery</a>
-        <a href="index.html#order">How to Order</a>
-        <a href="index.html#contact" class="btn btn--small">Order Now</a>
-      </nav>
-      <button type="button" class="nav__cart" data-cart-open aria-label="Open cart">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8h13l-1.2 12H6.7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
-        <span class="nav__cart-count" data-cart-count hidden>0</span>
-      </button>
-      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
-        <span></span><span></span>
-      </button>
+      <div class="nav__right">
+        <nav class="nav__links" id="navLinks">
+          <a href="index.html#products">Products</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#services">Services</a>
+          <a href="gallery.html" aria-current="page">Gallery</a>
+          <a href="index.html#order">How to Order</a>
+          <a href="index.html#contact" class="btn btn--small">Contact</a>
+        </nav>
+        <a href="checkout.html" class="nav__cart" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="nav__cart-count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -78,7 +80,6 @@
       <nav class="footer__links">
         <a href="index.html#about">About</a>
         <a href="index.html#services">Services</a>
-        <a href="shop.html">Shop</a>
         <a href="gallery.html">Gallery</a>
         <a href="index.html#contact">Contact</a>
       </nav>
@@ -87,8 +88,7 @@
   </footer>
 
   <script src="js/main.js"></script>
-  <script src="js/gallery.js"></script>
-  <script src="js/shop-data.js"></script>
   <script src="js/cart.js"></script>
+  <script src="js/gallery.js"></script>
 </body>
 </html>

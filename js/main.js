@@ -1,6 +1,14 @@
 // ============ CONFIG ============
-// TODO: put the real WhatsApp number here (country code, no + or spaces)
-const WHATSAPP_NUMBER = "260000000000";
+// WhatsApp number (country code, no + or spaces)
+const WHATSAPP_NUMBER = "260971234567";
+
+// Online payments (Airtel Money + card) at checkout.html run through
+// Flutterwave. Paste the PUBLIC key from the Flutterwave dashboard
+// (Settings > API keys) between the quotes. Test keys start with
+// FLWPUBK_TEST-, live keys with FLWPUBK-. While this is empty, checkout
+// sends the order on WhatsApp and payment is arranged there.
+// Never put the SECRET key anywhere in this website.
+const FLUTTERWAVE_PUBLIC_KEY = "";
 
 // Instagram posts: see instagram/config.php and api/instagram-posts.json (gallery code is in js/gallery.js)
 
@@ -48,6 +56,15 @@ document.getElementById("orderForm")?.addEventListener("submit", (e) => {
     `Details: ${f.get("message") || "-"}`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
 });
+
+// ============ Price list "Order on WhatsApp" button ============
+const orderBtn = document.getElementById("orderWhatsApp");
+if (orderBtn) {
+  const text = "Hello Maluba Blooms! I'd like to place an order from your price list.";
+  orderBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  orderBtn.target = "_blank";
+  orderBtn.rel = "noopener";
+}
 
 // ============ Footer year ============
 const yearEl = document.getElementById("year");
