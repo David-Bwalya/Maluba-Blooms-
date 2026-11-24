@@ -59,11 +59,11 @@ jobs:
         # Only public files are published; PHP code and the instagram/ folder stay off the site.
         run: |
           mkdir -p _site/api
-          cp -r index.html gallery.html product-gallery.html checkout.html css js images _site/
+          cp -r *.html css js images _site/
           cp api/instagram-posts.json _site/api/
           cp feed.json _site/api/instagram-feed.json
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
